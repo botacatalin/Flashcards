@@ -45,6 +45,7 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 
   const presenterMode = document.body && document.body.dataset.presenter === "true";
+  let builderReady = false;
 
   const setCardName = (value) => {
     if (!dom.cardNameTarget) {
@@ -249,6 +250,9 @@ document.addEventListener("DOMContentLoaded", () => {
       if (!Number.isInteger(meta.currentIndex)) {
         meta.currentIndex = DRAFT_INDEX;
       }
+      if (meta.cards.length === 0) {
+        meta.currentIndex = DRAFT_INDEX;
+      }
       if (parsed.draftContent) {
         meta.draftContent = parsed.draftContent;
       }
@@ -334,6 +338,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     renderSavedCards();
     updatePreview();
+    persistBuilderState();
   };
 
   const hasDraftContent = () => {
@@ -370,7 +375,9 @@ document.addEventListener("DOMContentLoaded", () => {
         }
       }
       updatePreview();
-      persistBuilderState();
+      if (builderReady) {
+        persistBuilderState();
+      }
     };
     document
       .querySelectorAll(`input[name="${name}"]`)
@@ -479,6 +486,8 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 
   const setupBuilder = () => {
+    loadBuilderState();
+
     if (dom.saveCardButton) {
       dom.saveCardButton.addEventListener("click", () => {
         meta.cards.push(buildCardMeta());
@@ -599,7 +608,7 @@ document.addEventListener("DOMContentLoaded", () => {
     bindLayoutPreview("front-layout", '[data-preview="front"]');
     bindLayoutPreview("back-layout", '[data-preview="back"]');
 
-    loadBuilderState();
+    builderReady = true;
     updatePreview();
     renderSavedCards();
   };
