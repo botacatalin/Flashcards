@@ -81,7 +81,9 @@
       }
 
       .preview-card {
-        margin: 0;
+        margin: 0 auto;
+        max-width: 720px;
+        width: 100%;
       }
 
       .preview-sides {
@@ -183,6 +185,13 @@
       .icon-only {
         padding: 0.35rem 0.45rem;
         line-height: 1;
+      }
+
+      .preview-nav {
+        display: flex;
+        justify-content: center;
+        gap: 0.75rem;
+        margin-top: 0.75rem;
       }
 
       @media (max-width: 900px) {
@@ -320,38 +329,6 @@
       </section>
     </div>
 
-    <script>
-      const bindLayoutPreview = (name, previewSelector) => {
-        const radios = document.querySelectorAll(`input[name="${name}"]`);
-        const preview = document.querySelector(previewSelector);
-        if (!preview || radios.length === 0) {
-          return;
-        }
-        const update = () => {
-          const selected = document.querySelector(`input[name="${name}"]:checked`);
-          if (selected) {
-            preview.dataset.layout = selected.value;
-          }
-        };
-        radios.forEach((radio) => radio.addEventListener("change", update));
-        update();
-      };
-
-      bindLayoutPreview("front-layout", '[data-preview="front"]');
-      bindLayoutPreview("back-layout", '[data-preview="back"]');
-
-      const cardNameInput = document.getElementById("card-name");
-      const cardNameTarget = document.querySelector("[data-card-name]");
-      if (cardNameInput && cardNameTarget) {
-        const updateCardName = () => {
-          const value = cardNameInput.value.trim();
-          cardNameTarget.textContent = value || "Card Name";
-        };
-        cardNameInput.addEventListener("input", updateCardName);
-        updateCardName();
-      }
-
-      feather.replace();
-    </script>
+    <script src="{{ url_for('static', filename='app.js') }}"></script>
   </body>
 </html>

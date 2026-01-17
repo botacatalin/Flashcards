@@ -1,16 +1,26 @@
 <div class="config-actions" role="group">
-  <button type="button" title="New Card" aria-label="New Card">
-    <i data-feather="plus"></i>
-  </button>
   <button
     class="secondary"
     type="button"
-    title="Build flashcard"
-    aria-label="Build flashcard"
+    title="Present flashcard"
+    aria-label="Present flashcard"
+    id="build-flashcard"
   >
     <i data-feather="folder-plus"></i>
   </button>
-  <button class="secondary" type="button" title="Save" aria-label="Save">
+  <input
+    id="build-json"
+    type="file"
+    accept="application/json"
+    hidden
+  />
+  <button
+    class="secondary"
+    type="button"
+    title="Save"
+    aria-label="Save"
+    id="save-json"
+  >
     <i data-feather="save"></i>
   </button>
 </div>
@@ -107,18 +117,13 @@
     </section>
   </div>
 
-  <button type="button">
+  <button type="button" id="save-card">
     <i data-feather="save"></i>
     Save Card
   </button>
 
   <section class="saved-cards">
     <header><strong>Saved Cards</strong></header>
-    <div class="saved-cards-grid">
-      <article><small>HTML Basics</small></article>
-      <article><small>Flask Intro</small></article>
-      <article><small>CSS Layouts</small></article>
-      <article><small>JS Events</small></article>
-    </div>
+    <div class="saved-cards-grid" id="saved-cards-grid"></div>
   </section>
 </form>
