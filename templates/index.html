@@ -20,13 +20,20 @@
         --pico-font-size: 0.92rem;
       }
 
+      body {
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+      }
+
       /* App layout */
       .app {
         display: grid;
         grid-template-columns: 1fr 2fr; /* 1/3 – 2/3 */
         gap: 1rem;
         padding: 1rem;
-        height: 100vh;
+        flex: 1;
+        min-height: 0;
       }
 
       .panel {
@@ -71,6 +78,117 @@
 
       .panel-content article {
         min-width: 0;
+      }
+
+      .preview-card {
+        margin: 0;
+      }
+
+      .preview-sides {
+        display: grid;
+        gap: 1rem;
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .preview-side h3 {
+        margin-bottom: 0.5rem;
+        font-size: 0.95rem;
+      }
+
+      .preview-label {
+        margin: 0 0 0.4rem;
+        font-size: 0.85rem;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: var(--pico-muted-color);
+      }
+
+      .preview-card-face {
+        border: 1px solid var(--pico-muted-border-color);
+        border-radius: var(--pico-border-radius);
+        background: var(--pico-card-background-color);
+        padding: 0.75rem;
+      }
+
+      .preview-name {
+        text-align: center;
+        font-size: 1.05rem;
+        margin: 0 0 0.75rem;
+      }
+
+      .preview-layout {
+        display: grid;
+        gap: 0.5rem;
+        min-height: 160px;
+      }
+
+      .preview-layout[data-layout="full"] {
+        grid-template-columns: 1fr;
+        grid-template-rows: 1fr;
+      }
+
+      .preview-layout[data-layout="split-half"] {
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: 1fr;
+      }
+
+      .preview-layout[data-layout="split-vertical"] {
+        grid-template-columns: 1fr;
+        grid-template-rows: 1fr 1fr;
+      }
+
+      .preview-layout[data-layout="split-mixed"] {
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: 1fr 1fr;
+        grid-template-areas:
+          "left right-top"
+          "left right-bottom";
+      }
+
+      .layout-area {
+        border: 1px dashed var(--pico-muted-border-color);
+        border-radius: var(--pico-border-radius);
+        padding: 0.5rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .preview-layout[data-layout="split-mixed"] .area-1 {
+        grid-area: left;
+      }
+
+      .preview-layout[data-layout="split-mixed"] .area-2 {
+        grid-area: right-top;
+      }
+
+      .preview-layout[data-layout="split-mixed"] .area-3 {
+        grid-area: right-bottom;
+      }
+
+      .preview-layout[data-layout="full"] .area-2,
+      .preview-layout[data-layout="full"] .area-3,
+      .preview-layout[data-layout="split-half"] .area-3,
+      .preview-layout[data-layout="split-vertical"] .area-3 {
+        display: none;
+      }
+
+      .area-actions {
+        display: flex;
+        gap: 0.5rem;
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+
+      .icon-only {
+        padding: 0.35rem 0.45rem;
+        line-height: 1;
+      }
+
+      @media (max-width: 900px) {
+        .preview-sides {
+          grid-template-columns: 1fr;
+        }
       }
 
       /* Collapsible configuration (details/summary) */
@@ -176,7 +294,11 @@
 
   <body>
     <header class="container">
-      <h3>Flashcard Maker</h3>
+      <nav>
+        <ul>
+          <li><h1>Flashcard Maker</h1></li>
+        </ul>
+      </nav>
     </header>
     <div class="app">
       <!-- LEFT: CONFIGURATION (COLLAPSIBLE) -->
@@ -199,6 +321,36 @@
     </div>
 
     <script>
+      const bindLayoutPreview = (name, previewSelector) => {
+        const radios = document.querySelectorAll(`input[name="${name}"]`);
+        const preview = document.querySelector(previewSelector);
+        if (!preview || radios.length === 0) {
+          return;
+        }
+        const update = () => {
+          const selected = document.querySelector(`input[name="${name}"]:checked`);
+          if (selected) {
+            preview.dataset.layout = selected.value;
+          }
+        };
+        radios.forEach((radio) => radio.addEventListener("change", update));
+        update();
+      };
+
+      bindLayoutPreview("front-layout", '[data-preview="front"]');
+      bindLayoutPreview("back-layout", '[data-preview="back"]');
+
+      const cardNameInput = document.getElementById("card-name");
+      const cardNameTarget = document.querySelector("[data-card-name]");
+      if (cardNameInput && cardNameTarget) {
+        const updateCardName = () => {
+          const value = cardNameInput.value.trim();
+          cardNameTarget.textContent = value || "Card Name";
+        };
+        cardNameInput.addEventListener("input", updateCardName);
+        updateCardName();
+      }
+
       feather.replace();
     </script>
   </body>

@@ -11,8 +11,8 @@ def create_app():
     def index():
         # Temporary in-memory flashcards
         flashcards = [
-            {"front": "HTML", "back": "Markup language for the web"},
-            {"front": "Flask", "back": "Python web framework"},
+            {"front": "Card Front", "back": "Card Back"},
+            {"front": "Card Front", "back": "Card Back"},
         ]
         return render_template("index.html", flashcards=flashcards)
 
