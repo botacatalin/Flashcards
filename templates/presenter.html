@@ -45,14 +45,24 @@
         gap: 1.25rem;
       }
 
+      .presenter-shell {
+        width: 100%;
+        display: grid;
+        grid-template-columns: auto 1fr auto;
+        align-items: center;
+        gap: 1rem;
+        justify-items: center;
+      }
+
       .presenter-card {
-        width: min(720px, 100%);
+        width: min(960px, 100%);
         perspective: 1200px;
+        cursor: pointer;
       }
 
       .presenter-card-inner {
         position: relative;
-        min-height: 360px;
+        min-height: 440px;
         transition: transform 0.7s ease;
         transform-style: preserve-3d;
       }
@@ -99,7 +109,7 @@
       .preview-layout {
         display: grid;
         gap: 0.75rem;
-        min-height: 200px;
+        min-height: 260px;
       }
 
       .preview-layout[data-layout="full"] {
@@ -196,9 +206,21 @@
         gap: 0.75rem;
       }
 
+      .presenter-hint {
+        font-size: 0.8rem;
+        color: #6b7280;
+        letter-spacing: 0.02em;
+      }
+
       @media (max-width: 900px) {
         .presenter-card-inner {
           min-height: 420px;
+        }
+
+        .presenter-shell {
+          grid-template-columns: 1fr;
+          justify-items: center;
+          gap: 0.75rem;
         }
       }
     </style>
@@ -251,8 +273,19 @@
 
     <main class="container">
       <section class="presenter-stage">
-        <div class="presenter-card" id="presenter-card">
-          <div class="presenter-card-inner">
+        <div class="presenter-shell">
+          <button
+            class="secondary icon-only"
+            type="button"
+            id="preview-prev"
+            title="Previous"
+            aria-label="Previous"
+          >
+            <i data-feather="chevron-left"></i>
+          </button>
+
+          <div class="presenter-card" id="presenter-card">
+            <div class="presenter-card-inner">
             <article class="presenter-face presenter-front">
               <span class="presenter-label">Front</span>
               <h2 class="presenter-title" data-card-name>Card Name</h2>
@@ -283,28 +316,9 @@
                 </div>
               </div>
             </article>
+            </div>
           </div>
-        </div>
 
-        <div class="presenter-controls" role="group">
-          <button
-            class="secondary icon-only"
-            type="button"
-            id="preview-prev"
-            title="Previous"
-            aria-label="Previous"
-          >
-            <i data-feather="chevron-left"></i>
-          </button>
-          <button
-            class="secondary"
-            type="button"
-            id="presenter-flip"
-            title="Flip"
-            aria-label="Flip"
-          >
-            Flip
-          </button>
           <button
             class="secondary icon-only"
             type="button"
@@ -315,6 +329,8 @@
             <i data-feather="chevron-right"></i>
           </button>
         </div>
+
+        <p class="presenter-hint">Click the card to flip.</p>
       </section>
     </main>
 

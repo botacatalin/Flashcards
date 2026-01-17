@@ -30,7 +30,6 @@ document.addEventListener("DOMContentLoaded", () => {
     presenterLoadButton: document.getElementById("presenter-load"),
     presenterLoadInput: document.getElementById("presenter-json"),
     presenterCard: document.getElementById("presenter-card"),
-    presenterFlipButton: document.getElementById("presenter-flip"),
     presenterFullscreenButton: document.getElementById("presenter-fullscreen"),
     frontPreview: document.querySelector('[data-preview="front"]'),
     backPreview: document.querySelector('[data-preview="back"]'),
@@ -614,11 +613,18 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 
   const setupPresenter = () => {
-    if (dom.presenterFlipButton) {
-      dom.presenterFlipButton.addEventListener("click", () => {
-        if (dom.presenterCard) {
-          dom.presenterCard.classList.toggle("is-flipped");
+    const toggleFlip = () => {
+      if (dom.presenterCard) {
+        dom.presenterCard.classList.toggle("is-flipped");
+      }
+    };
+
+    if (dom.presenterCard) {
+      dom.presenterCard.addEventListener("click", (event) => {
+        if (event.target.closest("button, a, input, textarea, select")) {
+          return;
         }
+        toggleFlip();
       });
     }
 
