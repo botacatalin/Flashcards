@@ -125,13 +125,21 @@
         gap: 1rem;
       }
 
-      @media (min-width: 900px) {
-        .card-sections {
-          grid-template-columns: 1fr 1fr;
-        }
+      .card-section article {
+        margin: 0;
       }
 
-      .card-section article {
+      .saved-cards {
+        margin-top: 1rem;
+      }
+
+      .saved-cards-grid {
+        display: grid;
+        gap: 0.5rem;
+        grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      }
+
+      .saved-cards-grid article {
         margin: 0;
       }
 
@@ -167,6 +175,9 @@
   </head>
 
   <body>
+    <header class="container">
+      <h3>Flashcard Maker</h3>
+    </header>
     <div class="app">
       <!-- LEFT: CONFIGURATION (COLLAPSIBLE) -->
       <aside class="panel">

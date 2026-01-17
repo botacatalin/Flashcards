@@ -1,27 +1,29 @@
 <div class="config-actions" role="group">
-  <button type="button">
+  <button type="button" title="New Card" aria-label="New Card">
     <i data-feather="plus"></i>
-    New Card
   </button>
-  <button class="secondary" type="button">
+  <button class="secondary" type="button" title="Import" aria-label="Import">
     <i data-feather="download"></i>
-    Import
   </button>
-  <button class="secondary" type="button">
+  <button class="secondary" type="button" title="Export" aria-label="Export">
     <i data-feather="upload"></i>
-    Export
   </button>
 </div>
 
 <hr />
 
 <form>
+  <label>
+    Card name
+    <input type="text" placeholder="e.g., HTML Basics" />
+  </label>
+
   <div class="card-sections">
     <section class="card-section">
       <article>
         <header><strong>Card Front</strong></header>
         <fieldset class="layout-options">
-          <legend>Layout</legend>
+          <lupdayegend>Layout</lupdayegend>
           <label>
             <input checked name="front-layout" type="radio" value="full" />
             <svg class="layout-icon" viewBox="0 0 34 24" aria-hidden="true">
@@ -88,4 +90,14 @@
     <i data-feather="save"></i>
     Save Card
   </button>
+
+  <section class="saved-cards">
+    <header><strong>Saved Cards</strong></header>
+    <div class="saved-cards-grid">
+      <article><small>HTML Basics</small></article>
+      <article><small>Flask Intro</small></article>
+      <article><small>CSS Layouts</small></article>
+      <article><small>JS Events</small></article>
+    </div>
+  </section>
 </form>
