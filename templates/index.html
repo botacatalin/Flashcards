@@ -207,6 +207,12 @@
         line-height: 1;
       }
 
+      .config-actions button {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+      }
+
       .preview-nav {
         display: flex;
         justify-content: center;
@@ -326,6 +332,44 @@
       <nav>
         <ul>
           <li><h1>Flashcard Builder</h1></li>
+        </ul>
+        <ul class="config-actions">
+          <li>
+            <button
+              class="secondary"
+              type="button"
+              title="Present flashcard"
+              aria-label="Present flashcard"
+              id="build-flashcard"
+            >
+              <i data-feather="folder-plus"></i>
+              Present
+            </button>
+          </li>
+          <li>
+            <button
+              class="secondary"
+              type="button"
+              title="Save"
+              aria-label="Save"
+              id="save-json"
+            >
+              <i data-feather="save"></i>
+              Save Flashcards
+            </button>
+          </li>
+          <li>
+            <button
+              class="secondary"
+              type="button"
+              title="New project"
+              aria-label="New project"
+              id="new-project"
+            >
+              <i data-feather="plus-square"></i>
+              New Project
+            </button>
+          </li>
         </ul>
       </nav>
     </header>

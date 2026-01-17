@@ -2,15 +2,19 @@ document.addEventListener("DOMContentLoaded", () => {
   const STORAGE_KEY = "flashcard-builder-state";
   const PRESENTER_KEY = "flashcard-presenter-data";
   const DEFAULT_LAYOUT = "full";
+  const DRAFT_INDEX = -1;
 
-  const state = {
+  const meta = {
+    version: 1,
     cards: [],
-    currentIndex: 0,
+    currentIndex: DRAFT_INDEX,
     draftContent: {
       front: {},
       back: {},
     },
   };
+
+  window.flashcardMeta = meta;
 
   const dom = {
     cardNameInput: document.getElementById("card-name"),
@@ -20,6 +24,7 @@ document.addEventListener("DOMContentLoaded", () => {
     saveJsonButton: document.getElementById("save-json"),
     buildButton: document.getElementById("build-flashcard"),
     buildInput: document.getElementById("build-json"),
+    newProjectButton: document.getElementById("new-project"),
     previewPrev: document.getElementById("preview-prev"),
     previewNext: document.getElementById("preview-next"),
     presenterLoadButton: document.getElementById("presenter-load"),
@@ -79,6 +84,21 @@ document.addEventListener("DOMContentLoaded", () => {
     };
   };
 
+  const getActiveCard = () => {
+    if (meta.currentIndex < 0 || meta.currentIndex >= meta.cards.length) {
+      return null;
+    }
+    return meta.cards[meta.currentIndex];
+  };
+
+  const getActiveContent = () => {
+    const activeCard = getActiveCard();
+    if (activeCard) {
+      return activeCard.content || { front: {}, back: {} };
+    }
+    return meta.draftContent;
+  };
+
   const buildCardMeta = () =>
     normalizeCard({
       name: dom.cardNameInput && dom.cardNameInput.value.trim(),
@@ -86,7 +106,7 @@ document.addEventListener("DOMContentLoaded", () => {
         front: getSelectedLayout("front-layout"),
         back: getSelectedLayout("back-layout"),
       },
-      content: state.draftContent,
+      content: meta.draftContent,
     });
 
   const renderSavedCards = () => {
@@ -94,18 +114,19 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
     dom.savedCardsGrid.innerHTML = "";
-    if (state.cards.length === 0) {
+    if (meta.cards.length === 0) {
       const empty = document.createElement("p");
       empty.className = "muted";
       empty.textContent = "No saved cards yet.";
       dom.savedCardsGrid.appendChild(empty);
       return;
     }
-    state.cards.forEach((card, index) => {
+    meta.cards.forEach((card, index) => {
       const item = document.createElement("article");
       const name = document.createElement("small");
       name.textContent = card.name;
-      if (index === state.currentIndex) {
+      item.dataset.index = String(index);
+      if (index === meta.currentIndex) {
         item.setAttribute("aria-current", "true");
       }
       item.appendChild(name);
@@ -113,22 +134,19 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   };
 
-  const getActiveContent = () => {
-    if (presenterMode) {
-      if (state.cards.length === 0) {
-        return { front: {}, back: {} };
-      }
-      return state.cards[state.currentIndex].content || { front: {}, back: {} };
-    }
-    return state.draftContent;
-  };
-
   const setAreaContent = (side, area, content) => {
     if (presenterMode) {
       return;
     }
-    state.draftContent[side] = state.draftContent[side] || {};
-    state.draftContent[side][area] = content;
+    const activeCard = getActiveCard();
+    if (activeCard) {
+      activeCard.content = activeCard.content || { front: {}, back: {} };
+      activeCard.content[side] = activeCard.content[side] || {};
+      activeCard.content[side][area] = content;
+      return;
+    }
+    meta.draftContent[side] = meta.draftContent[side] || {};
+    meta.draftContent[side][area] = content;
   };
 
   const renderAreaContent = (areaElement, content) => {
@@ -175,18 +193,27 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const updatePreview = () => {
     if (presenterMode) {
-      if (state.cards.length === 0) {
+      if (meta.cards.length === 0) {
         setCardName("No cards loaded");
         setPreviewLayouts(DEFAULT_LAYOUT, DEFAULT_LAYOUT);
         renderContent();
         return;
       }
-      const card = state.cards[state.currentIndex];
+      const card = getActiveCard() || meta.cards[0];
       setCardName(card.name);
       setPreviewLayouts(card.layouts.front, card.layouts.back);
       renderContent();
       return;
     }
+
+    const activeCard = getActiveCard();
+    if (activeCard) {
+      setCardName(activeCard.name);
+      setPreviewLayouts(activeCard.layouts.front, activeCard.layouts.back);
+      renderContent();
+      return;
+    }
+
     setCardName(dom.cardNameInput ? dom.cardNameInput.value.trim() : "");
     setPreviewLayouts(
       getSelectedLayout("front-layout"),
@@ -198,10 +225,10 @@ document.addEventListener("DOMContentLoaded", () => {
   const persistBuilderState = () => {
     try {
       const payload = {
-        version: 1,
-        cards: state.cards,
-        currentIndex: state.currentIndex,
-        draftContent: state.draftContent,
+        version: meta.version,
+        cards: meta.cards,
+        currentIndex: meta.currentIndex,
+        draftContent: meta.draftContent,
       };
       localStorage.setItem(STORAGE_KEY, JSON.stringify(payload));
     } catch (error) {
@@ -217,13 +244,13 @@ document.addEventListener("DOMContentLoaded", () => {
       }
       const parsed = JSON.parse(raw);
       const cards = Array.isArray(parsed.cards) ? parsed.cards : [];
-      state.cards = cards.map(normalizeCard);
-      state.currentIndex = Math.min(
-        Math.max(Number(parsed.currentIndex) || 0, 0),
-        Math.max(state.cards.length - 1, 0)
-      );
+      meta.cards = cards.map(normalizeCard);
+      meta.currentIndex = Number(parsed.currentIndex);
+      if (!Number.isInteger(meta.currentIndex)) {
+        meta.currentIndex = DRAFT_INDEX;
+      }
       if (parsed.draftContent) {
-        state.draftContent = parsed.draftContent;
+        meta.draftContent = parsed.draftContent;
       }
     } catch (error) {
       console.warn("Unable to load flashcard state.", error);
@@ -231,12 +258,13 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 
   const storePresenterData = (cards) => {
-    state.cards = cards.map(normalizeCard);
-    state.currentIndex = 0;
+    localStorage.removeItem(PRESENTER_KEY);
+    meta.cards = cards.map(normalizeCard);
+    meta.currentIndex = 0;
     const payload = {
-      version: 1,
-      cards: state.cards,
-      currentIndex: state.currentIndex,
+      version: meta.version,
+      cards: meta.cards,
+      currentIndex: meta.currentIndex,
     };
     localStorage.setItem(PRESENTER_KEY, JSON.stringify(payload));
     updatePreview();
@@ -251,23 +279,81 @@ document.addEventListener("DOMContentLoaded", () => {
       }
       const data = JSON.parse(raw);
       const cards = Array.isArray(data.cards) ? data.cards : [];
-      state.cards = cards.map(normalizeCard);
-      state.currentIndex = Math.min(
+      meta.cards = cards.map(normalizeCard);
+      meta.currentIndex = Math.min(
         Math.max(Number(data.currentIndex) || 0, 0),
-        Math.max(state.cards.length - 1, 0)
+        Math.max(meta.cards.length - 1, 0)
       );
     } catch (error) {
       console.warn("Unable to load presenter data.", error);
     }
   };
 
+  const loadCardToForm = (index) => {
+    const card = meta.cards[index];
+    if (!card) {
+      return;
+    }
+    meta.currentIndex = index;
+    if (dom.cardNameInput) {
+      dom.cardNameInput.value = card.name;
+    }
+    const frontRadio = document.querySelector(
+      `input[name="front-layout"][value="${card.layouts.front}"]`
+    );
+    if (frontRadio) {
+      frontRadio.checked = true;
+    }
+    const backRadio = document.querySelector(
+      `input[name="back-layout"][value="${card.layouts.back}"]`
+    );
+    if (backRadio) {
+      backRadio.checked = true;
+    }
+    renderSavedCards();
+    updatePreview();
+  };
+
+  const resetDraft = () => {
+    meta.currentIndex = DRAFT_INDEX;
+    meta.draftContent = { front: {}, back: {} };
+    if (dom.cardNameInput) {
+      dom.cardNameInput.value = "";
+    }
+    const frontRadio = document.querySelector(
+      `input[name="front-layout"][value="${DEFAULT_LAYOUT}"]`
+    );
+    if (frontRadio) {
+      frontRadio.checked = true;
+    }
+    const backRadio = document.querySelector(
+      `input[name="back-layout"][value="${DEFAULT_LAYOUT}"]`
+    );
+    if (backRadio) {
+      backRadio.checked = true;
+    }
+    renderSavedCards();
+    updatePreview();
+  };
+
+  const hasDraftContent = () => {
+    const name = dom.cardNameInput ? dom.cardNameInput.value.trim() : "";
+    const hasName = Boolean(name);
+    const hasLayouts =
+      getSelectedLayout("front-layout") !== DEFAULT_LAYOUT ||
+      getSelectedLayout("back-layout") !== DEFAULT_LAYOUT;
+    const hasAreas = Object.values(meta.draftContent).some((side) =>
+      Object.values(side || {}).some((value) => value && value.value)
+    );
+    return hasName || hasLayouts || hasAreas;
+  };
+
   const bindLayoutPreview = (name, previewSelector) => {
     if (presenterMode) {
       return;
     }
-    const radios = document.querySelectorAll(`input[name="${name}"]`);
     const preview = document.querySelector(previewSelector);
-    if (!preview || radios.length === 0) {
+    if (!preview) {
       return;
     }
     const update = () => {
@@ -275,9 +361,20 @@ document.addEventListener("DOMContentLoaded", () => {
       if (selected) {
         preview.dataset.layout = selected.value;
       }
+      const activeCard = getActiveCard();
+      if (activeCard && selected) {
+        if (name === "front-layout") {
+          activeCard.layouts.front = selected.value;
+        } else {
+          activeCard.layouts.back = selected.value;
+        }
+      }
       updatePreview();
+      persistBuilderState();
     };
-    radios.forEach((radio) => radio.addEventListener("change", update));
+    document
+      .querySelectorAll(`input[name="${name}"]`)
+      .forEach((radio) => radio.addEventListener("change", update));
     update();
   };
 
@@ -301,6 +398,31 @@ document.addEventListener("DOMContentLoaded", () => {
       return [data];
     }
     return [];
+  };
+
+  const normalizeImageUrl = (value) => {
+    if (!value) {
+      return value;
+    }
+    try {
+      const url = new URL(value);
+      const fileMatch = url.pathname.match(/\/File:(.+)$/i);
+      const mediaMatch = url.pathname.match(/\/media\/File:(.+)$/i);
+      const filename = fileMatch ? fileMatch[1] : mediaMatch ? mediaMatch[1] : null;
+      if (filename && url.hostname.includes("wikipedia.org")) {
+        return `https://commons.wikimedia.org/wiki/Special:FilePath/${encodeURIComponent(
+          filename
+        )}`;
+      }
+      if (filename && url.hostname.includes("wikimedia.org")) {
+        return `https://commons.wikimedia.org/wiki/Special:FilePath/${encodeURIComponent(
+          filename
+        )}`;
+      }
+    } catch (error) {
+      return value;
+    }
+    return value;
   };
 
   const openContentModal = (mode, area) => {
@@ -356,47 +478,25 @@ document.addEventListener("DOMContentLoaded", () => {
     closeContentModal();
   };
 
-  const normalizeImageUrl = (value) => {
-    if (!value) {
-      return value;
-    }
-    try {
-      const url = new URL(value);
-      const fileMatch = url.pathname.match(/\/File:(.+)$/i);
-      const mediaMatch = url.pathname.match(/\/media\/File:(.+)$/i);
-      const filename = fileMatch ? fileMatch[1] : mediaMatch ? mediaMatch[1] : null;
-      if (filename && url.hostname.includes("wikipedia.org")) {
-        return `https://commons.wikimedia.org/wiki/Special:FilePath/${encodeURIComponent(
-          filename
-        )}`;
-      }
-      if (filename && url.hostname.includes("wikimedia.org")) {
-        return `https://commons.wikimedia.org/wiki/Special:FilePath/${encodeURIComponent(
-          filename
-        )}`;
-      }
-    } catch (error) {
-      return value;
-    }
-    return value;
-  };
-
   const setupBuilder = () => {
     if (dom.saveCardButton) {
       dom.saveCardButton.addEventListener("click", () => {
-        state.cards.push(buildCardMeta());
-        state.currentIndex = state.cards.length - 1;
+        meta.cards.push(buildCardMeta());
         renderSavedCards();
-        updatePreview();
         persistBuilderState();
+        resetDraft();
       });
     }
 
     if (dom.saveJsonButton) {
       dom.saveJsonButton.addEventListener("click", () => {
+        const cards = [...meta.cards];
+        if (meta.currentIndex === DRAFT_INDEX && hasDraftContent()) {
+          cards.push(buildCardMeta());
+        }
         const payload = {
-          version: 1,
-          cards: state.cards,
+          version: meta.version,
+          cards,
         };
         const blob = new Blob([JSON.stringify(payload, null, 2)], {
           type: "application/json",
@@ -431,10 +531,34 @@ document.addEventListener("DOMContentLoaded", () => {
       });
     }
 
+    if (dom.newProjectButton) {
+      dom.newProjectButton.addEventListener("click", () => {
+        const confirmed = window.confirm(
+          "This will remove any saved cards. Are you sure?"
+        );
+        if (!confirmed) {
+          return;
+        }
+        meta.cards = [];
+        meta.currentIndex = DRAFT_INDEX;
+        meta.draftContent = { front: {}, back: {} };
+        localStorage.removeItem(STORAGE_KEY);
+        renderSavedCards();
+        resetDraft();
+      });
+    }
+
     if (dom.cardNameInput) {
       dom.cardNameInput.addEventListener("input", (event) => {
-        setCardName(event.target.value.trim());
+        const value = event.target.value.trim();
+        const activeCard = getActiveCard();
+        if (activeCard) {
+          activeCard.name = value || "Untitled card";
+          renderSavedCards();
+        }
+        setCardName(value);
         updatePreview();
+        persistBuilderState();
       });
     }
 
@@ -457,6 +581,20 @@ document.addEventListener("DOMContentLoaded", () => {
       }
       openContentModal(button.dataset.action, area);
     });
+
+    if (dom.savedCardsGrid) {
+      dom.savedCardsGrid.addEventListener("click", (event) => {
+        const item = event.target.closest("[data-index]");
+        if (!item) {
+          return;
+        }
+        const index = Number(item.dataset.index);
+        if (Number.isNaN(index)) {
+          return;
+        }
+        loadCardToForm(index);
+      });
+    }
 
     bindLayoutPreview("front-layout", '[data-preview="front"]');
     bindLayoutPreview("back-layout", '[data-preview="back"]');
@@ -497,11 +635,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (dom.previewPrev) {
       dom.previewPrev.addEventListener("click", () => {
-        if (state.cards.length === 0) {
+        if (meta.cards.length === 0) {
           return;
         }
-        state.currentIndex =
-          (state.currentIndex - 1 + state.cards.length) % state.cards.length;
+        meta.currentIndex =
+          (meta.currentIndex - 1 + meta.cards.length) % meta.cards.length;
         updatePreview();
         resetPresenterFlip();
       });
@@ -509,10 +647,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (dom.previewNext) {
       dom.previewNext.addEventListener("click", () => {
-        if (state.cards.length === 0) {
+        if (meta.cards.length === 0) {
           return;
         }
-        state.currentIndex = (state.currentIndex + 1) % state.cards.length;
+        meta.currentIndex = (meta.currentIndex + 1) % meta.cards.length;
         updatePreview();
         resetPresenterFlip();
       });

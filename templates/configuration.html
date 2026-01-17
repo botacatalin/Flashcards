@@ -1,33 +1,9 @@
-<div class="config-actions" role="group">
-  <button
-    class="secondary"
-    type="button"
-    title="Present flashcard"
-    aria-label="Present flashcard"
-    id="build-flashcard"
-  >
-    <i data-feather="folder-plus"></i>
-    Present
-  </button>
-  <input
-    id="build-json"
-    type="file"
-    accept="application/json"
-    hidden
-  />
-  <button
-    class="secondary"
-    type="button"
-    title="Save"
-    aria-label="Save"
-    id="save-json"
-  >
-    <i data-feather="save"></i>
-    Save JSON
-  </button>
-</div>
-
-<hr />
+<input
+  id="build-json"
+  type="file"
+  accept="application/json"
+  hidden
+/>
 
 <form>
   <label>
@@ -120,8 +96,8 @@
   </div>
 
   <button type="button" id="save-card">
-    <i data-feather="save"></i>
-    Save Card
+    <i data-feather="plus"></i>
+    New Card
   </button>
 
   <section class="saved-cards">
