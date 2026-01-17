@@ -6,6 +6,10 @@ document.addEventListener("DOMContentLoaded", () => {
   const state = {
     cards: [],
     currentIndex: 0,
+    draftContent: {
+      front: {},
+      back: {},
+    },
   };
 
   const dom = {
@@ -25,6 +29,14 @@ document.addEventListener("DOMContentLoaded", () => {
     presenterFullscreenButton: document.getElementById("presenter-fullscreen"),
     frontPreview: document.querySelector('[data-preview="front"]'),
     backPreview: document.querySelector('[data-preview="back"]'),
+    contentModal: document.getElementById("content-modal"),
+    contentTitle: document.getElementById("content-modal-title"),
+    textContent: document.getElementById("text-content"),
+    textLabel: document.getElementById("text-content-label"),
+    imageContent: document.getElementById("image-content"),
+    imageLabel: document.getElementById("image-content-label"),
+    contentSave: document.getElementById("content-save"),
+    contentCancel: document.getElementById("content-cancel"),
   };
 
   const presenterMode = document.body && document.body.dataset.presenter === "true";
@@ -52,12 +64,17 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const normalizeCard = (card) => {
     const layouts = card && card.layouts ? card.layouts : {};
+    const content = card && card.content ? card.content : {};
     const name = card && card.name ? card.name : "Untitled card";
     return {
       name: name.trim() || "Untitled card",
       layouts: {
         front: layouts.front || DEFAULT_LAYOUT,
         back: layouts.back || DEFAULT_LAYOUT,
+      },
+      content: {
+        front: content.front || {},
+        back: content.back || {},
       },
     };
   };
@@ -69,6 +86,7 @@ document.addEventListener("DOMContentLoaded", () => {
         front: getSelectedLayout("front-layout"),
         back: getSelectedLayout("back-layout"),
       },
+      content: state.draftContent,
     });
 
   const renderSavedCards = () => {
@@ -95,6 +113,60 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   };
 
+  const getActiveContent = () => {
+    if (presenterMode) {
+      if (state.cards.length === 0) {
+        return { front: {}, back: {} };
+      }
+      return state.cards[state.currentIndex].content || { front: {}, back: {} };
+    }
+    return state.draftContent;
+  };
+
+  const setAreaContent = (side, area, content) => {
+    if (presenterMode) {
+      return;
+    }
+    state.draftContent[side] = state.draftContent[side] || {};
+    state.draftContent[side][area] = content;
+  };
+
+  const renderAreaContent = (areaElement, content) => {
+    if (!areaElement) {
+      return;
+    }
+    const container = areaElement.querySelector(".area-content");
+    if (!container) {
+      return;
+    }
+    container.innerHTML = "";
+    if (!content) {
+      return;
+    }
+    if (content.type === "text") {
+      const text = document.createElement("p");
+      text.textContent = content.value;
+      container.appendChild(text);
+      return;
+    }
+    if (content.type === "image") {
+      const image = document.createElement("img");
+      image.src = content.value;
+      image.alt = "Flashcard";
+      container.appendChild(image);
+    }
+  };
+
+  const renderContent = () => {
+    const content = getActiveContent();
+    document.querySelectorAll(".layout-area").forEach((area) => {
+      const side = area.dataset.side;
+      const key = area.dataset.area;
+      const value = content[side] ? content[side][key] : null;
+      renderAreaContent(area, value);
+    });
+  };
+
   const resetPresenterFlip = () => {
     if (dom.presenterCard) {
       dom.presenterCard.classList.remove("is-flipped");
@@ -102,15 +174,17 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 
   const updatePreview = () => {
-    if (presenterMode && state.cards.length === 0) {
-      setCardName("No cards loaded");
-      setPreviewLayouts(DEFAULT_LAYOUT, DEFAULT_LAYOUT);
-      return;
-    }
-    if (state.cards.length > 0) {
+    if (presenterMode) {
+      if (state.cards.length === 0) {
+        setCardName("No cards loaded");
+        setPreviewLayouts(DEFAULT_LAYOUT, DEFAULT_LAYOUT);
+        renderContent();
+        return;
+      }
       const card = state.cards[state.currentIndex];
       setCardName(card.name);
       setPreviewLayouts(card.layouts.front, card.layouts.back);
+      renderContent();
       return;
     }
     setCardName(dom.cardNameInput ? dom.cardNameInput.value.trim() : "");
@@ -118,6 +192,7 @@ document.addEventListener("DOMContentLoaded", () => {
       getSelectedLayout("front-layout"),
       getSelectedLayout("back-layout")
     );
+    renderContent();
   };
 
   const persistBuilderState = () => {
@@ -126,6 +201,7 @@ document.addEventListener("DOMContentLoaded", () => {
         version: 1,
         cards: state.cards,
         currentIndex: state.currentIndex,
+        draftContent: state.draftContent,
       };
       localStorage.setItem(STORAGE_KEY, JSON.stringify(payload));
     } catch (error) {
@@ -146,6 +222,9 @@ document.addEventListener("DOMContentLoaded", () => {
         Math.max(Number(parsed.currentIndex) || 0, 0),
         Math.max(state.cards.length - 1, 0)
       );
+      if (parsed.draftContent) {
+        state.draftContent = parsed.draftContent;
+      }
     } catch (error) {
       console.warn("Unable to load flashcard state.", error);
     }
@@ -183,19 +262,20 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 
   const bindLayoutPreview = (name, previewSelector) => {
+    if (presenterMode) {
+      return;
+    }
     const radios = document.querySelectorAll(`input[name="${name}"]`);
     const preview = document.querySelector(previewSelector);
     if (!preview || radios.length === 0) {
       return;
     }
     const update = () => {
-      if (state.cards.length > 0) {
-        return;
-      }
       const selected = document.querySelector(`input[name="${name}"]:checked`);
       if (selected) {
         preview.dataset.layout = selected.value;
       }
+      updatePreview();
     };
     radios.forEach((radio) => radio.addEventListener("change", update));
     update();
@@ -208,6 +288,71 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     const text = await file.text();
     return JSON.parse(text);
+  };
+
+  const extractCardsFromData = (data) => {
+    if (Array.isArray(data)) {
+      return data;
+    }
+    if (data && Array.isArray(data.cards)) {
+      return data.cards;
+    }
+    if (data && (data.name || data.layouts || data.content)) {
+      return [data];
+    }
+    return [];
+  };
+
+  const openContentModal = (mode, area) => {
+    if (!dom.contentModal) {
+      return;
+    }
+    dom.contentModal.dataset.mode = mode;
+    dom.contentModal.dataset.side = area.dataset.side || "front";
+    dom.contentModal.dataset.area = area.dataset.area || "area-1";
+    if (dom.contentTitle) {
+      dom.contentTitle.textContent = mode === "image" ? "Add image" : "Add text";
+    }
+    if (dom.textLabel) {
+      dom.textLabel.hidden = mode !== "text";
+    }
+    if (dom.imageLabel) {
+      dom.imageLabel.hidden = mode !== "image";
+    }
+    if (dom.textContent) {
+      dom.textContent.value = "";
+    }
+    if (dom.imageContent) {
+      dom.imageContent.value = "";
+    }
+    dom.contentModal.showModal();
+  };
+
+  const closeContentModal = () => {
+    if (dom.contentModal && dom.contentModal.open) {
+      dom.contentModal.close();
+    }
+  };
+
+  const saveContentFromModal = () => {
+    if (!dom.contentModal) {
+      return;
+    }
+    const mode = dom.contentModal.dataset.mode;
+    const side = dom.contentModal.dataset.side;
+    const area = dom.contentModal.dataset.area;
+    const value =
+      mode === "image"
+        ? dom.imageContent && dom.imageContent.value.trim()
+        : dom.textContent && dom.textContent.value.trim();
+    if (!value) {
+      closeContentModal();
+      return;
+    }
+    setAreaContent(side, area, { type: mode, value });
+    updatePreview();
+    persistBuilderState();
+    closeContentModal();
   };
 
   const setupBuilder = () => {
@@ -249,7 +394,7 @@ document.addEventListener("DOMContentLoaded", () => {
           if (!data) {
             return;
           }
-          const cards = Array.isArray(data.cards) ? data.cards : [];
+          const cards = extractCardsFromData(data);
           storePresenterData(cards);
           window.location.href = "/presenter";
         } catch (error) {
@@ -266,6 +411,26 @@ document.addEventListener("DOMContentLoaded", () => {
         updatePreview();
       });
     }
+
+    if (dom.contentSave) {
+      dom.contentSave.addEventListener("click", saveContentFromModal);
+    }
+
+    if (dom.contentCancel) {
+      dom.contentCancel.addEventListener("click", closeContentModal);
+    }
+
+    document.addEventListener("click", (event) => {
+      const button = event.target.closest("[data-action]");
+      if (!button) {
+        return;
+      }
+      const area = button.closest(".layout-area");
+      if (!area) {
+        return;
+      }
+      openContentModal(button.dataset.action, area);
+    });
 
     bindLayoutPreview("front-layout", '[data-preview="front"]');
     bindLayoutPreview("back-layout", '[data-preview="back"]');
@@ -294,7 +459,7 @@ document.addEventListener("DOMContentLoaded", () => {
           if (!data) {
             return;
           }
-          const cards = Array.isArray(data.cards) ? data.cards : [];
+          const cards = extractCardsFromData(data);
           storePresenterData(cards);
         } catch (error) {
           console.warn("Unable to load presenter JSON.", error);
@@ -327,8 +492,6 @@ document.addEventListener("DOMContentLoaded", () => {
       });
     }
 
-    loadPresenterData();
-    updatePreview();
     if (dom.presenterFullscreenButton) {
       dom.presenterFullscreenButton.addEventListener("click", async () => {
         if (!document.fullscreenElement) {
@@ -338,6 +501,9 @@ document.addEventListener("DOMContentLoaded", () => {
         }
       });
     }
+
+    loadPresenterData();
+    updatePreview();
   };
 
   if (presenterMode) {

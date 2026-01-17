@@ -154,6 +154,8 @@
         display: flex;
         align-items: center;
         justify-content: center;
+        flex-direction: column;
+        gap: 0.5rem;
       }
 
       .preview-layout[data-layout="split-mixed"] .area-1 {
@@ -180,6 +182,21 @@
         gap: 0.5rem;
         flex-wrap: wrap;
         justify-content: center;
+      }
+
+      .area-content {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+      }
+
+      .area-content img {
+        max-width: 100%;
+        max-height: 160px;
+        border-radius: calc(var(--pico-border-radius) - 2px);
+        object-fit: cover;
       }
 
       .icon-only {
@@ -305,7 +322,7 @@
     <header class="container">
       <nav>
         <ul>
-          <li><h1>Flashcard Maker</h1></li>
+          <li><h1>Flashcard Builder</h1></li>
         </ul>
       </nav>
     </header>
@@ -328,6 +345,28 @@
         {% include "preview.html" %}
       </section>
     </div>
+
+    <dialog id="content-modal">
+      <article>
+        <header><strong id="content-modal-title">Add content</strong></header>
+        <form method="dialog">
+          <label id="text-content-label">
+            Text content
+            <textarea id="text-content" rows="4"></textarea>
+          </label>
+          <label id="image-content-label">
+            Image URL
+            <input id="image-content" type="url" placeholder="https://..." />
+          </label>
+          <footer>
+            <button class="secondary" type="button" id="content-cancel">
+              Cancel
+            </button>
+            <button type="button" id="content-save">Save</button>
+          </footer>
+        </form>
+      </article>
+    </dialog>
 
     <script src="{{ url_for('static', filename='app.js') }}"></script>
   </body>
