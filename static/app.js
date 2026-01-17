@@ -341,10 +341,11 @@ document.addEventListener("DOMContentLoaded", () => {
     const mode = dom.contentModal.dataset.mode;
     const side = dom.contentModal.dataset.side;
     const area = dom.contentModal.dataset.area;
-    const value =
+    const rawValue =
       mode === "image"
         ? dom.imageContent && dom.imageContent.value.trim()
         : dom.textContent && dom.textContent.value.trim();
+    const value = mode === "image" ? normalizeImageUrl(rawValue) : rawValue;
     if (!value) {
       closeContentModal();
       return;
@@ -353,6 +354,31 @@ document.addEventListener("DOMContentLoaded", () => {
     updatePreview();
     persistBuilderState();
     closeContentModal();
+  };
+
+  const normalizeImageUrl = (value) => {
+    if (!value) {
+      return value;
+    }
+    try {
+      const url = new URL(value);
+      const fileMatch = url.pathname.match(/\/File:(.+)$/i);
+      const mediaMatch = url.pathname.match(/\/media\/File:(.+)$/i);
+      const filename = fileMatch ? fileMatch[1] : mediaMatch ? mediaMatch[1] : null;
+      if (filename && url.hostname.includes("wikipedia.org")) {
+        return `https://commons.wikimedia.org/wiki/Special:FilePath/${encodeURIComponent(
+          filename
+        )}`;
+      }
+      if (filename && url.hostname.includes("wikimedia.org")) {
+        return `https://commons.wikimedia.org/wiki/Special:FilePath/${encodeURIComponent(
+          filename
+        )}`;
+      }
+    } catch (error) {
+      return value;
+    }
+    return value;
   };
 
   const setupBuilder = () => {
