@@ -1,0 +1,91 @@
+<div class="config-actions" role="group">
+  <button type="button">
+    <i data-feather="plus"></i>
+    New Card
+  </button>
+  <button class="secondary" type="button">
+    <i data-feather="download"></i>
+    Import
+  </button>
+  <button class="secondary" type="button">
+    <i data-feather="upload"></i>
+    Export
+  </button>
+</div>
+
+<hr />
+
+<form>
+  <div class="card-sections">
+    <section class="card-section">
+      <article>
+        <header><strong>Card Front</strong></header>
+        <fieldset class="layout-options">
+          <legend>Layout</legend>
+          <label>
+            <input checked name="front-layout" type="radio" value="full" />
+            <svg class="layout-icon" viewBox="0 0 34 24" aria-hidden="true">
+              <rect x="2" y="2" width="30" height="20" fill="none" stroke="currentColor" />
+              <rect x="4" y="5" width="26" height="14" fill="currentColor" opacity="0.15" />
+            </svg>
+          </label>
+          <label>
+            <input name="front-layout" type="radio" value="split-half" />
+            <svg class="layout-icon" viewBox="0 0 34 24" aria-hidden="true">
+              <rect x="2" y="2" width="30" height="20" fill="none" stroke="currentColor" />
+              <rect x="4" y="5" width="12" height="14" fill="currentColor" opacity="0.15" />
+              <rect x="18" y="5" width="12" height="14" fill="currentColor" opacity="0.15" />
+            </svg>
+          </label>
+          <label>
+            <input name="front-layout" type="radio" value="split-mixed" />
+            <svg class="layout-icon" viewBox="0 0 34 24" aria-hidden="true">
+              <rect x="2" y="2" width="30" height="20" fill="none" stroke="currentColor" />
+              <rect x="4" y="5" width="12" height="14" fill="currentColor" opacity="0.15" />
+              <rect x="18" y="5" width="12" height="6" fill="currentColor" opacity="0.15" />
+              <rect x="18" y="13" width="12" height="6" fill="currentColor" opacity="0.15" />
+            </svg>
+          </label>
+        </fieldset>
+      </article>
+    </section>
+
+    <section class="card-section">
+      <article>
+        <header><strong>Card Back</strong></header>
+        <fieldset class="layout-options">
+          <legend>Layout</legend>
+          <label>
+            <input checked name="back-layout" type="radio" value="full" />
+            <svg class="layout-icon" viewBox="0 0 34 24" aria-hidden="true">
+              <rect x="2" y="2" width="30" height="20" fill="none" stroke="currentColor" />
+              <rect x="4" y="5" width="26" height="14" fill="currentColor" opacity="0.15" />
+            </svg>
+          </label>
+          <label>
+            <input name="back-layout" type="radio" value="split-half" />
+            <svg class="layout-icon" viewBox="0 0 34 24" aria-hidden="true">
+              <rect x="2" y="2" width="30" height="20" fill="none" stroke="currentColor" />
+              <rect x="4" y="5" width="12" height="14" fill="currentColor" opacity="0.15" />
+              <rect x="18" y="5" width="12" height="14" fill="currentColor" opacity="0.15" />
+            </svg>
+          </label>
+          <label>
+            <input name="back-layout" type="radio" value="split-mixed" />
+            <svg class="layout-icon" viewBox="0 0 34 24" aria-hidden="true">
+              <rect x="2" y="2" width="30" height="20" fill="none" stroke="currentColor" />
+              <rect x="4" y="5" width="12" height="14" fill="currentColor" opacity="0.15" />
+              <rect x="18" y="5" width="12" height="6" fill="currentColor" opacity="0.15" />
+              <rect x="18" y="13" width="12" height="6" fill="currentColor" opacity="0.15" />
+            </svg>
+          </label>
+        </fieldset>
+      </article>
+    </section>
+  </div>
+
+  <button type="button">
+    <i data-feather="save"></i>
+    Save Card
+  </button>
+</form>

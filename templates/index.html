@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Flashcards</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <!-- Pico.css -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css"
+    />
+
+    <!-- Feather Icons -->
+    <script src="https://unpkg.com/feather-icons"></script>
+
+    <style>
+      /* Typography refinement */
+      :root {
+        --pico-font-size: 0.92rem;
+      }
+
+      /* App layout */
+      .app {
+        display: grid;
+        grid-template-columns: 1fr 2fr; /* 1/3 – 2/3 */
+        gap: 1rem;
+        padding: 1rem;
+        height: 100vh;
+      }
+
+      .panel {
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+        min-width: 0; /* prevent grid overflow */
+        border: 1px solid var(--pico-muted-border-color);
+        border-radius: var(--pico-border-radius);
+        background: var(--pico-card-background-color);
+        padding: 0.85rem;
+        height: 100%;
+      }
+
+      .panel-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 0.75rem;
+        padding-bottom: 0.5rem;
+        border-bottom: 1px solid var(--pico-muted-border-color);
+        margin-bottom: 0.75rem;
+      }
+
+      .panel-header h2 {
+        margin: 0;
+        font-size: 0.95rem;
+        font-weight: 600;
+        white-space: nowrap;
+      }
+
+      .panel-content {
+        overflow-y: auto;
+        min-height: 0; /* needed for scroll within flex */
+        padding-right: 0.25rem;
+        flex: 1;
+      }
+
+      .panel-content .grid {
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      }
+
+      .panel-content article {
+        min-width: 0;
+      }
+
+      /* Collapsible configuration (details/summary) */
+      .config-details > summary {
+        list-style: none;
+        cursor: pointer;
+      }
+
+      .config-details > summary::-webkit-details-marker {
+        display: none;
+      }
+
+      .config-details[open] > summary {
+        margin-bottom: 0.75rem;
+      }
+
+      .config-details {
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+      }
+
+      .layout-options {
+        display: flex;
+        flex-wrap: nowrap;
+        gap: 0.4rem;
+      }
+
+      .layout-options label {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      .layout-icon {
+        width: 26px;
+        height: 18px;
+        border: 1px solid var(--pico-muted-border-color);
+        border-radius: 4px;
+        background: var(--pico-card-background-color);
+        padding: 3px;
+      }
+
+      .config-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+      }
+
+      .card-sections {
+        display: grid;
+        gap: 1rem;
+      }
+
+      @media (min-width: 900px) {
+        .card-sections {
+          grid-template-columns: 1fr 1fr;
+        }
+      }
+
+      .card-section article {
+        margin: 0;
+      }
+
+      /* Responsive: stack panels on smaller screens */
+      @media (max-width: 900px) {
+        .app {
+          grid-template-columns: 1fr;
+          height: auto;
+          min-height: 100vh;
+        }
+
+        .panel {
+          overflow: visible;
+        }
+
+        .panel-content {
+          overflow: visible;
+          padding-right: 0;
+        }
+      }
+
+      @media (max-width: 520px) {
+        .app {
+          padding: 0.75rem;
+          gap: 0.75rem;
+        }
+
+        .panel-header h2 {
+          font-size: 0.9rem;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="app">
+      <!-- LEFT: CONFIGURATION (COLLAPSIBLE) -->
+      <aside class="panel">
+        <details open class="config-details">
+          <summary class="panel-header">
+            <h2>Configuration</h2>
+          </summary>
+
+          <div class="panel-content">
+            {% include "configuration.html" %}
+          </div>
+        </details>
+      </aside>
+
+      <!-- RIGHT: PREVIEW -->
+      <section class="panel">
+        {% include "preview.html" %}
+      </section>
+    </div>
+
+    <script>
+      feather.replace();
+    </script>
+  </body>
+</html>
