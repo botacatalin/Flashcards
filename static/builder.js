@@ -25,7 +25,7 @@
     backPreview: document.querySelector('[data-preview="back"]'),
     contentModal: document.getElementById("content-modal"),
     contentTitle: document.getElementById("content-modal-title"),
-    textContent: document.getElementById("text-content"),
+    textEditor: document.getElementById("text-editor"),
     textLabel: document.getElementById("text-content-label"),
     imageContent: document.getElementById("image-content"),
     imageLabel: document.getElementById("image-content-label"),
@@ -133,8 +133,9 @@
       return;
     }
     if (content.type === "text") {
-      const text = document.createElement("p");
-      text.textContent = content.value;
+      const text = document.createElement("div");
+      text.className = "rich-text";
+      text.innerHTML = content.value;
       container.appendChild(text);
       return;
     }
@@ -171,6 +172,40 @@
       getSelectedLayout("back-layout")
     );
     renderContent();
+  };
+
+  const isEmptyRichText = (value) => {
+    if (!value) {
+      return true;
+    }
+    const cleaned = value
+      .replace(/<br\s*\/?>/gi, "")
+      .replace(/&nbsp;/gi, " ")
+      .replace(/<div><\/div>/gi, "")
+      .replace(/<p><\/p>/gi, "")
+      .replace(/<h\d><\/h\d>/gi, "")
+      .replace(/<[^>]+>/g, "")
+      .trim();
+    return cleaned.length === 0;
+  };
+
+  const hasContent = (content) => {
+    if (!content) {
+      return false;
+    }
+    const sides = ["front", "back"];
+    return sides.some((side) => {
+      const areas = content[side] || {};
+      return Object.values(areas).some((entry) => {
+        if (!entry || !entry.value) {
+          return false;
+        }
+        if (entry.type === "text") {
+          return !isEmptyRichText(entry.value);
+        }
+        return Boolean(entry.value);
+      });
+    });
   };
 
   const renderSavedCards = () => {
@@ -319,6 +354,75 @@
     }
   };
 
+  let pellEditor = null;
+
+  const initTextEditor = () => {
+    if (!dom.textEditor || !window.pell || pellEditor) {
+      return;
+    }
+    const colorIcon = (hex) =>
+      `<span class="pell-color" style="background:${hex}"></span>`;
+    pellEditor = window.pell.init({
+      element: dom.textEditor,
+      actions: [
+        {
+          name: "size-small",
+          icon: "H5",
+          title: "Small",
+          result: () =>
+            document.execCommand("formatBlock", false, "<h5>"),
+        },
+        {
+          name: "size-normal",
+          icon: "H3",
+          title: "Normal",
+          result: () =>
+            document.execCommand("formatBlock", false, "<h3>"),
+        },
+        {
+          name: "size-large",
+          icon: "H1",
+          title: "Large",
+          result: () =>
+            document.execCommand("formatBlock", false, "<h1>"),
+        },
+        {
+          name: "color-ink",
+          icon: colorIcon("#0f172a"),
+          title: "Ink",
+          result: () => document.execCommand("foreColor", false, "#0f172a"),
+        },
+        {
+          name: "color-blue",
+          icon: colorIcon("#2563eb"),
+          title: "Blue",
+          result: () => document.execCommand("foreColor", false, "#2563eb"),
+        },
+        {
+          name: "color-green",
+          icon: colorIcon("#16a34a"),
+          title: "Green",
+          result: () => document.execCommand("foreColor", false, "#16a34a"),
+        },
+        {
+          name: "color-red",
+          icon: colorIcon("#b91c1c"),
+          title: "Red",
+          result: () => document.execCommand("foreColor", false, "#b91c1c"),
+        },
+        {
+          name: "color-amber",
+          icon: colorIcon("#b45309"),
+          title: "Amber",
+          result: () => document.execCommand("foreColor", false, "#b45309"),
+        },
+      ],
+    });
+    pellEditor.content.setAttribute("aria-label", "Text editor");
+    pellEditor.content.setAttribute("role", "textbox");
+    pellEditor.content.setAttribute("aria-multiline", "true");
+  };
+
   const openContentModal = (mode, area) => {
     if (!dom.contentModal) {
       return;
@@ -335,8 +439,8 @@
     if (dom.imageLabel) {
       dom.imageLabel.hidden = mode !== "image";
     }
-    if (dom.textContent) {
-      dom.textContent.value = "";
+    if (mode === "text" && pellEditor) {
+      pellEditor.content.innerHTML = "<h3><br></h3>";
     }
     if (dom.imageContent) {
       dom.imageContent.value = "";
@@ -360,9 +464,9 @@
     const rawValue =
       mode === "image"
         ? dom.imageContent && dom.imageContent.value.trim()
-        : dom.textContent && dom.textContent.value.trim();
+        : pellEditor && pellEditor.content.innerHTML.trim();
     const value = mode === "image" ? normalizeImageUrl(rawValue) : rawValue;
-    if (!value) {
+    if (!value || (mode === "text" && isEmptyRichText(value))) {
       closeContentModal();
       return;
     }
@@ -382,6 +486,7 @@
 
   const setupBuilder = () => {
     loadBuilderState();
+    initTextEditor();
 
     if (dom.saveCardButton) {
       dom.saveCardButton.addEventListener("click", (event) => {
@@ -395,9 +500,16 @@
 
     if (dom.saveJsonButton) {
       dom.saveJsonButton.addEventListener("click", () => {
+        const exportCards = [...meta.cards];
+        if (meta.currentIndex === DRAFT_INDEX) {
+          const draftCard = buildCardMeta();
+          if (hasContent(draftCard.content)) {
+            exportCards.push(draftCard);
+          }
+        }
         const payload = {
           version: meta.version,
-          cards: meta.cards,
+          cards: exportCards,
         };
         const blob = new Blob([JSON.stringify(payload, null, 2)], {
           type: "application/json",

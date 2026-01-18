@@ -113,6 +113,18 @@
   min-height: 120px;
 }
 
+.rich-text {
+  width: 100%;
+  display: block;
+  text-align: center;
+  white-space: pre-wrap;
+  color: #111827;
+}
+
+.rich-text > * {
+  margin: 0;
+}
+
 .area-content p {
   margin: 0;
   font-size: 1.05rem;

@@ -123,6 +123,19 @@
   min-height: 120px;
 }
 
+.rich-text {
+  width: 100%;
+  display: block;
+  text-align: center;
+  white-space: pre-wrap;
+  color: #3f2a1d;
+  font-family: "Georgia", "Times New Roman", serif;
+}
+
+.rich-text > * {
+  margin: 0;
+}
+
 .area-content img {
   max-width: 100%;
   max-height: 220px;

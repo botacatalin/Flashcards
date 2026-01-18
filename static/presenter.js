@@ -77,8 +77,9 @@
       return;
     }
     if (content.type === "text") {
-      const text = document.createElement("p");
-      text.textContent = content.value;
+      const text = document.createElement("div");
+      text.className = "rich-text";
+      text.innerHTML = content.value;
       container.appendChild(text);
       return;
     }

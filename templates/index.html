@@ -10,6 +10,10 @@
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css"
     />
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/pell@1.0.6/dist/pell.min.css"
+    />
 
     <!-- Feather Icons -->
     <script src="https://unpkg.com/feather-icons"></script>
@@ -261,6 +265,73 @@
         object-fit: cover;
       }
 
+      .rich-text {
+        width: 100%;
+        display: block;
+      }
+
+      .rich-text ul,
+      .rich-text ol {
+        margin: 0;
+        padding-left: 1rem;
+      }
+
+      .pell {
+        border: 1px solid var(--pico-muted-border-color);
+        border-radius: var(--pico-border-radius);
+        background: var(--pico-card-background-color);
+      }
+
+      .pell-actionbar {
+        border-bottom: 1px solid var(--pico-muted-border-color);
+        background: transparent;
+        padding: 0.25rem;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.25rem;
+      }
+
+      .pell-button {
+        border-radius: 999px;
+        border: 1px solid var(--pico-muted-border-color);
+        background: transparent;
+        color: #0f172a;
+        padding: 0;
+        line-height: 1;
+        width: 2rem;
+        height: 2rem;
+        font-size: 0.7rem;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .pell-button-selected {
+        border-color: var(--pico-primary);
+        color: var(--pico-primary);
+      }
+
+      .pell-content {
+        min-height: 140px;
+        padding: 0.6rem;
+      }
+
+      .pell-color {
+        display: inline-block;
+        width: 0.85rem;
+        height: 0.85rem;
+        border-radius: 999px;
+        border: 1px solid var(--pico-muted-border-color);
+        vertical-align: middle;
+      }
+
+      #content-modal footer {
+        display: flex;
+        justify-content: flex-end;
+        gap: 0.5rem;
+        margin-top: 0.75rem;
+      }
+
       .icon-only {
         padding: 0.35rem 0.45rem;
         line-height: 1;
@@ -482,10 +553,10 @@
       <article>
         <header><strong id="content-modal-title">Add content</strong></header>
         <form method="dialog">
-          <label id="text-content-label">
-            Text content
-            <textarea id="text-content" rows="4"></textarea>
-          </label>
+          <div id="text-content-label">
+            <label for="text-editor">Text content</label>
+            <div id="text-editor"></div>
+          </div>
           <label id="image-content-label">
             Image URL
             <input id="image-content" type="url" placeholder="https://..." />
@@ -512,6 +583,7 @@
       </article>
     </dialog>
 
+    <script src="https://unpkg.com/pell@1.0.6/dist/pell.min.js"></script>
     <script src="{{ url_for('static', filename='app.js') }}"></script>
   </body>
 </html>
