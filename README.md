@@ -14,3 +14,6 @@ The application has two components
 - Load Flashcard button - Allows the user to upload a json containing flashcards data.
 - Export Flashcard button - Allows the user to save as json the flashcards they build.
 - New Projects button - Removes everything. Start over.
+
+© 2026 nodes.ro 
+Contact: nodes.ro@proton.eu  
