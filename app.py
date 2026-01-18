@@ -1,4 +1,4 @@
-from flask import Flask, render_template, redirect, url_for, jsonify
+from flask import Flask, render_template, redirect, url_for, jsonify, Response
 import config
 import os
 
@@ -14,12 +14,7 @@ def create_app():
 
     @app.route("/builder")
     def builder():
-        # Temporary in-memory flashcards
-        flashcards = [
-            {"front": "Card Front", "back": "Card Back"},
-            {"front": "Card Front", "back": "Card Back"},
-        ]
-        return render_template("index.html", flashcards=flashcards)
+        return render_template("index.html")
 
     @app.route("/presenter")
     def presenter():
@@ -41,6 +36,14 @@ def create_app():
                     }
                 )
         return jsonify(entries)
+
+    @app.route("/api/readme")
+    def readme():
+        readme_path = os.path.join(app.root_path, "README.md")
+        if not os.path.isfile(readme_path):
+            return Response("", mimetype="text/plain")
+        with open(readme_path, "r", encoding="utf-8") as handle:
+            return Response(handle.read(), mimetype="text/plain")
 
     return app
 

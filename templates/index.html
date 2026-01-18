@@ -26,6 +26,62 @@
         flex-direction: column;
       }
 
+      header.builder-header {
+        background: rgba(255, 255, 255, 0.9);
+        border-bottom: 1px solid rgba(15, 23, 42, 0.08);
+        backdrop-filter: blur(8px);
+      }
+
+      .builder-nav {
+        align-items: center;
+      }
+
+      .builder-kicker {
+        display: block;
+        font-size: 0.65rem;
+        letter-spacing: 0.3em;
+        text-transform: uppercase;
+        color: #64748b;
+        margin-bottom: 0.35rem;
+      }
+
+      .builder-title {
+        margin: 0;
+        font-size: 1.6rem;
+        color: #0f172a;
+      }
+
+      .help-button {
+        margin-left: 0.5rem;
+        border-radius: 999px;
+        width: 2rem;
+        height: 2rem;
+        padding: 0;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        opacity: 0.65;
+        line-height: 1;
+        font-size: 1rem;
+      }
+
+      .help-icon {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 1rem;
+        height: 1rem;
+        line-height: 1;
+      }
+
+      .help-content {
+        white-space: pre-wrap;
+      }
+
+      .help-button:hover {
+        opacity: 1;
+      }
+
       /* App layout */
       .app {
         display: grid;
@@ -329,10 +385,13 @@
   </head>
 
   <body>
-    <header class="container">
-      <nav>
+    <header class="builder-header">
+      <nav class="container builder-nav">
         <ul>
-          <li><h1>Flashcard Builder</h1></li>
+          <li>
+            <span class="builder-kicker">Builder</span>
+            <h1 class="builder-title">Flashcard Builder</h1>
+          </li>
         </ul>
         <ul class="config-actions">
           <li>
@@ -369,6 +428,17 @@
             >
               <i data-feather="plus-square"></i>
               New Project
+            </button>
+          </li>
+          <li>
+            <button
+              class="secondary help-button"
+              type="button"
+              id="builder-help"
+              title="About builder and presenter"
+              aria-label="About builder and presenter"
+            >
+              <span class="help-icon">?</span>
             </button>
           </li>
         </ul>
@@ -413,6 +483,18 @@
             <button type="button" id="content-save">Save</button>
           </footer>
         </form>
+      </article>
+    </dialog>
+
+    <dialog id="builder-help-modal">
+      <article>
+        <header><strong>About this project</strong></header>
+        <div id="builder-help-content" class="help-content"></div>
+        <footer>
+          <button class="secondary" type="button" id="builder-help-close">
+            Close
+          </button>
+        </footer>
       </article>
     </dialog>
 

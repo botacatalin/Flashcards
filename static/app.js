@@ -42,6 +42,10 @@ document.addEventListener("DOMContentLoaded", () => {
     imageLabel: document.getElementById("image-content-label"),
     contentSave: document.getElementById("content-save"),
     contentCancel: document.getElementById("content-cancel"),
+    builderHelpButton: document.getElementById("builder-help"),
+    builderHelpModal: document.getElementById("builder-help-modal"),
+    builderHelpClose: document.getElementById("builder-help-close"),
+    builderHelpContent: document.getElementById("builder-help-content"),
   };
 
   const presenterMode = document.body && document.body.dataset.presenter === "true";
@@ -619,6 +623,29 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (dom.contentCancel) {
       dom.contentCancel.addEventListener("click", closeContentModal);
+    }
+
+    if (dom.builderHelpButton && dom.builderHelpModal) {
+      dom.builderHelpButton.addEventListener("click", async () => {
+        if (dom.builderHelpContent) {
+          try {
+            const response = await fetch("/api/readme", { cache: "no-store" });
+            if (response.ok) {
+              dom.builderHelpContent.textContent = await response.text();
+            }
+          } catch (error) {
+            dom.builderHelpContent.textContent =
+              "Unable to load README content.";
+          }
+        }
+        dom.builderHelpModal.showModal();
+      });
+    }
+
+    if (dom.builderHelpClose && dom.builderHelpModal) {
+      dom.builderHelpClose.addEventListener("click", () => {
+        dom.builderHelpModal.close();
+      });
     }
 
     document.addEventListener("click", (event) => {

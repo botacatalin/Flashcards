@@ -31,6 +31,31 @@
           linear-gradient(180deg, #f5f6f8 0%, #eef1f5 100%);
       }
 
+      header.presenter-header {
+        background: rgba(255, 255, 255, 0.9);
+        border-bottom: 1px solid rgba(15, 23, 42, 0.08);
+        backdrop-filter: blur(8px);
+      }
+
+      .presenter-nav {
+        align-items: center;
+      }
+
+      .presenter-title {
+        margin: 0;
+        font-size: 1.6rem;
+        color: #0f172a;
+      }
+
+      .presenter-kicker {
+        display: block;
+        font-size: 0.65rem;
+        letter-spacing: 0.3em;
+        text-transform: uppercase;
+        color: #64748b;
+        margin-bottom: 0.35rem;
+      }
+
       main.container {
         flex: 1;
         display: flex;
@@ -97,13 +122,6 @@
         letter-spacing: 0.18em;
         font-size: 0.7rem;
         color: #6b7280;
-      }
-
-      .presenter-title {
-        text-align: center;
-        font-size: 1.6rem;
-        margin: 0;
-        color: #111827;
       }
 
       .preview-layout {
@@ -227,10 +245,13 @@
   </head>
 
   <body data-presenter="true">
-    <header class="container">
-      <nav>
+    <header class="presenter-header">
+      <nav class="container presenter-nav">
         <ul>
-          <li><h1>Flashcard Presenter</h1></li>
+          <li>
+            <span class="presenter-kicker">Presenter</span>
+            <h1 class="presenter-title">Flashcard Presenter</h1>
+          </li>
         </ul>
         <ul>
           <li>
