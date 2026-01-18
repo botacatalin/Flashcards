@@ -102,6 +102,19 @@ document.addEventListener("DOMContentLoaded", () => {
     };
   };
 
+  const buildCardMeta = () => {
+    const name = dom.cardNameInput ? dom.cardNameInput.value.trim() : "";
+    const content = JSON.parse(JSON.stringify(getActiveContent()));
+    return normalizeCard({
+      name,
+      layouts: {
+        front: getSelectedLayout("front-layout"),
+        back: getSelectedLayout("back-layout"),
+      },
+      content,
+    });
+  };
+
   const normalizeImageUrl = (value) => {
     if (!value) {
       return value;
@@ -370,18 +383,6 @@ document.addEventListener("DOMContentLoaded", () => {
     persistBuilderState();
   };
 
-  const hasDraftContent = () => {
-    const name = dom.cardNameInput ? dom.cardNameInput.value.trim() : "";
-    const hasName = Boolean(name);
-    const hasLayouts =
-      getSelectedLayout("front-layout") !== DEFAULT_LAYOUT ||
-      getSelectedLayout("back-layout") !== DEFAULT_LAYOUT;
-    const hasAreas = Object.values(meta.draftContent).some((side) =>
-      Object.values(side || {}).some((value) => value && value.value)
-    );
-    return hasName || hasLayouts || hasAreas;
-  };
-
   const bindLayoutPreview = (name, previewSelector) => {
     if (presenterMode) {
       return;
@@ -544,24 +545,32 @@ document.addEventListener("DOMContentLoaded", () => {
   const setupBuilder = () => {
     loadBuilderState();
 
+    const handleSaveCard = (event) => {
+      event.preventDefault();
+      meta.cards.push(buildCardMeta());
+      meta.currentIndex = meta.cards.length - 1;
+      renderSavedCards();
+      updatePreview();
+      persistBuilderState();
+    };
+
     if (dom.saveCardButton) {
-      dom.saveCardButton.addEventListener("click", () => {
-        meta.cards.push(buildCardMeta());
-        renderSavedCards();
-        persistBuilderState();
-        resetDraft();
+      dom.saveCardButton.addEventListener("click", handleSaveCard);
+    } else {
+      document.addEventListener("click", (event) => {
+        const target = event.target.closest("#save-card");
+        if (!target) {
+          return;
+        }
+        handleSaveCard(event);
       });
     }
 
     if (dom.saveJsonButton) {
       dom.saveJsonButton.addEventListener("click", () => {
-        const cards = [...meta.cards];
-        if (meta.currentIndex === DRAFT_INDEX && hasDraftContent()) {
-          cards.push(buildCardMeta());
-        }
         const payload = {
           version: meta.version,
-          cards,
+          cards: meta.cards,
         };
         const blob = new Blob([JSON.stringify(payload, null, 2)], {
           type: "application/json",
