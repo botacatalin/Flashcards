@@ -1,6 +1,5 @@
 # Overview
-Flashcard Builder is a two‑part tool: the builder lets you design two‑sided flashcards with layouts, text, and images, then exports the card metadata as JSON, while the
-  presenter loads that JSON (or built‑in sets) to display the flashcards in a polished flip‑card viewer.
+Flashcard Builder is a two‑part tool: the builder lets you design two‑sided flashcards with layouts, text, and images, then exports the card metadata as JSON, while the presenter loads that JSON to display the flashcards in a polished flip‑card viewer.
 
 The application has two components
 - The Builder lets you create flashcard content.
