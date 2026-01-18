@@ -367,21 +367,21 @@
       actions: [
         {
           name: "size-small",
-          icon: "H5",
+          icon: "S",
           title: "Small",
           result: () =>
             document.execCommand("formatBlock", false, "<h5>"),
         },
         {
           name: "size-normal",
-          icon: "H3",
+          icon: "M",
           title: "Normal",
           result: () =>
             document.execCommand("formatBlock", false, "<h3>"),
         },
         {
           name: "size-large",
-          icon: "H1",
+          icon: "L",
           title: "Large",
           result: () =>
             document.execCommand("formatBlock", false, "<h1>"),
