@@ -32,6 +32,8 @@ document.addEventListener("DOMContentLoaded", () => {
     presenterDefaultSelect: document.getElementById("presenter-default"),
     presenterCard: document.getElementById("presenter-card"),
     presenterFullscreenButton: document.getElementById("presenter-fullscreen"),
+    presenterShell: document.getElementById("presenter-shell"),
+    presenterEmpty: document.getElementById("presenter-empty"),
     frontPreview: document.querySelector('[data-preview="front"]'),
     backPreview: document.querySelector('[data-preview="back"]'),
     contentModal: document.getElementById("content-modal"),
@@ -199,10 +201,19 @@ document.addEventListener("DOMContentLoaded", () => {
   const updatePreview = () => {
     if (presenterMode) {
       if (meta.cards.length === 0) {
-        setCardName("No cards loaded");
-        setPreviewLayouts(DEFAULT_LAYOUT, DEFAULT_LAYOUT);
-        renderContent();
+        if (dom.presenterShell) {
+          dom.presenterShell.hidden = true;
+        }
+        if (dom.presenterEmpty) {
+          dom.presenterEmpty.hidden = false;
+        }
         return;
+      }
+      if (dom.presenterShell) {
+        dom.presenterShell.hidden = false;
+      }
+      if (dom.presenterEmpty) {
+        dom.presenterEmpty.hidden = true;
       }
       const card = getActiveCard() || meta.cards[0];
       setCardName(card.name);

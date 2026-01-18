@@ -70,6 +70,11 @@
         gap: 1.25rem;
       }
 
+      .presenter-empty {
+        text-align: center;
+        color: #6b7280;
+      }
+
       .presenter-shell {
         width: 100%;
         display: grid;
@@ -301,7 +306,11 @@
 
     <main class="container">
       <section class="presenter-stage">
-        <div class="presenter-shell">
+        <p id="presenter-empty" class="presenter-empty" hidden>
+          Select a topic or load a JSON file to begin.
+        </p>
+
+        <div class="presenter-shell" id="presenter-shell">
           <button
             class="secondary icon-only"
             type="button"
