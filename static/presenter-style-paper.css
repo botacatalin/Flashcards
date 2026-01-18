@@ -55,6 +55,7 @@
   display: grid;
   gap: 0.75rem;
   min-height: 260px;
+  flex: 1;
 }
 
 .preview-layout[data-layout="full"] {
@@ -109,6 +110,7 @@
   justify-content: center;
   flex-direction: column;
   gap: 0.5rem;
+  flex: 1;
 }
 
 .area-content {
