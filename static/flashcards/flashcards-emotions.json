@@ -5,24 +5,39 @@
       "name": "Happy",
       "layouts": {"front": "full", "back": "full"},
       "content": {
-        "front": {"area-1": {"type": "text", "value": "Happy"}},
-        "back": {"area-1": {"type": "text", "value": "😀"}}
+        "front": {"area-1": {"type": "text", "value": "😀"}},
+        "back": {
+          "area-1": {
+            "type": "text",
+            "value": "Feeling joyful, pleased, or content."
+          }
+        }
       }
     },
     {
       "name": "Sad",
       "layouts": {"front": "full", "back": "full"},
       "content": {
-        "front": {"area-1": {"type": "text", "value": "Sad"}},
-        "back": {"area-1": {"type": "text", "value": "😢"}}
+        "front": {"area-1": {"type": "text", "value": "😢"}},
+        "back": {
+          "area-1": {
+            "type": "text",
+            "value": "Feeling unhappy or down." 
+          }
+        }
       }
     },
     {
       "name": "Surprised",
       "layouts": {"front": "full", "back": "full"},
       "content": {
-        "front": {"area-1": {"type": "text", "value": "Surprised"}},
-        "back": {"area-1": {"type": "text", "value": "😮"}}
+        "front": {"area-1": {"type": "text", "value": "😮"}},
+        "back": {
+          "area-1": {
+            "type": "text",
+            "value": "Feeling startled or astonished by something unexpected."
+          }
+        }
       }
     }
   ]
