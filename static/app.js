@@ -8,10 +8,7 @@ document.addEventListener("DOMContentLoaded", () => {
     version: 1,
     cards: [],
     currentIndex: DRAFT_INDEX,
-    draftContent: {
-      front: {},
-      back: {},
-    },
+    draftContent: { front: {}, back: {} },
   };
 
   window.flashcardMeta = meta;
@@ -25,8 +22,6 @@ document.addEventListener("DOMContentLoaded", () => {
     buildButton: document.getElementById("build-flashcard"),
     buildInput: document.getElementById("build-json"),
     newProjectButton: document.getElementById("new-project"),
-    previewPrev: document.getElementById("preview-prev"),
-    previewNext: document.getElementById("preview-next"),
     presenterLoadButton: document.getElementById("presenter-load"),
     presenterLoadInput: document.getElementById("presenter-json"),
     presenterDefaultSelect: document.getElementById("presenter-default"),
@@ -34,6 +29,8 @@ document.addEventListener("DOMContentLoaded", () => {
     presenterFullscreenButton: document.getElementById("presenter-fullscreen"),
     presenterShell: document.getElementById("presenter-shell"),
     presenterEmpty: document.getElementById("presenter-empty"),
+    previewPrev: document.getElementById("preview-prev"),
+    previewNext: document.getElementById("preview-next"),
     frontPreview: document.querySelector('[data-preview="front"]'),
     backPreview: document.querySelector('[data-preview="back"]'),
     contentModal: document.getElementById("content-modal"),
@@ -51,13 +48,24 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 
   const presenterMode = document.body && document.body.dataset.presenter === "true";
-  let builderReady = false;
+
+  const getActiveCard = () =>
+    meta.currentIndex >= 0 && meta.currentIndex < meta.cards.length
+      ? meta.cards[meta.currentIndex]
+      : null;
+
+  const getActiveContent = () => {
+    const activeCard = getActiveCard();
+    if (activeCard) {
+      return activeCard.content || { front: {}, back: {} };
+    }
+    return meta.draftContent;
+  };
 
   const setCardName = (value) => {
-    if (!dom.cardNameTarget) {
-      return;
+    if (dom.cardNameTarget) {
+      dom.cardNameTarget.textContent = value || "Card Name";
     }
-    dom.cardNameTarget.textContent = value || "Card Name";
   };
 
   const setPreviewLayouts = (front, back) => {
@@ -91,69 +99,24 @@ document.addEventListener("DOMContentLoaded", () => {
     };
   };
 
-  const getActiveCard = () => {
-    if (meta.currentIndex < 0 || meta.currentIndex >= meta.cards.length) {
-      return null;
+  const normalizeImageUrl = (value) => {
+    if (!value) {
+      return value;
     }
-    return meta.cards[meta.currentIndex];
-  };
-
-  const getActiveContent = () => {
-    const activeCard = getActiveCard();
-    if (activeCard) {
-      return activeCard.content || { front: {}, back: {} };
-    }
-    return meta.draftContent;
-  };
-
-  const buildCardMeta = () =>
-    normalizeCard({
-      name: dom.cardNameInput && dom.cardNameInput.value.trim(),
-      layouts: {
-        front: getSelectedLayout("front-layout"),
-        back: getSelectedLayout("back-layout"),
-      },
-      content: meta.draftContent,
-    });
-
-  const renderSavedCards = () => {
-    if (!dom.savedCardsGrid) {
-      return;
-    }
-    dom.savedCardsGrid.innerHTML = "";
-    if (meta.cards.length === 0) {
-      const empty = document.createElement("p");
-      empty.className = "muted";
-      empty.textContent = "No saved cards yet.";
-      dom.savedCardsGrid.appendChild(empty);
-      return;
-    }
-    meta.cards.forEach((card, index) => {
-      const item = document.createElement("article");
-      const name = document.createElement("small");
-      name.textContent = card.name;
-      item.dataset.index = String(index);
-      if (index === meta.currentIndex) {
-        item.setAttribute("aria-current", "true");
+    try {
+      const url = new URL(value);
+      const fileMatch = url.pathname.match(/\/File:(.+)$/i);
+      const mediaMatch = url.pathname.match(/\/media\/File:(.+)$/i);
+      const filename = fileMatch ? fileMatch[1] : mediaMatch ? mediaMatch[1] : null;
+      if (filename && (url.hostname.includes("wikipedia.org") || url.hostname.includes("wikimedia.org"))) {
+        return `https://commons.wikimedia.org/wiki/Special:FilePath/${encodeURIComponent(
+          filename
+        )}`;
       }
-      item.appendChild(name);
-      dom.savedCardsGrid.appendChild(item);
-    });
-  };
-
-  const setAreaContent = (side, area, content) => {
-    if (presenterMode) {
-      return;
+    } catch (error) {
+      return value;
     }
-    const activeCard = getActiveCard();
-    if (activeCard) {
-      activeCard.content = activeCard.content || { front: {}, back: {} };
-      activeCard.content[side] = activeCard.content[side] || {};
-      activeCard.content[side][area] = content;
-      return;
-    }
-    meta.draftContent[side] = meta.draftContent[side] || {};
-    meta.draftContent[side][area] = content;
+    return value;
   };
 
   const renderAreaContent = (areaElement, content) => {
@@ -190,12 +153,6 @@ document.addEventListener("DOMContentLoaded", () => {
       const value = content[side] ? content[side][key] : null;
       renderAreaContent(area, value);
     });
-  };
-
-  const resetPresenterFlip = () => {
-    if (dom.presenterCard) {
-      dom.presenterCard.classList.remove("is-flipped");
-    }
   };
 
   const updatePreview = () => {
@@ -238,6 +195,31 @@ document.addEventListener("DOMContentLoaded", () => {
     renderContent();
   };
 
+  const renderSavedCards = () => {
+    if (!dom.savedCardsGrid) {
+      return;
+    }
+    dom.savedCardsGrid.innerHTML = "";
+    if (meta.cards.length === 0) {
+      const empty = document.createElement("p");
+      empty.className = "muted";
+      empty.textContent = "No saved cards yet.";
+      dom.savedCardsGrid.appendChild(empty);
+      return;
+    }
+    meta.cards.forEach((card, index) => {
+      const item = document.createElement("article");
+      const name = document.createElement("small");
+      name.textContent = card.name;
+      item.dataset.index = String(index);
+      if (index === meta.currentIndex) {
+        item.setAttribute("aria-current", "true");
+      }
+      item.appendChild(name);
+      dom.savedCardsGrid.appendChild(item);
+    });
+  };
+
   const persistBuilderState = () => {
     try {
       const payload = {
@@ -262,10 +244,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const cards = Array.isArray(parsed.cards) ? parsed.cards : [];
       meta.cards = cards.map(normalizeCard);
       meta.currentIndex = Number(parsed.currentIndex);
-      if (!Number.isInteger(meta.currentIndex)) {
-        meta.currentIndex = DRAFT_INDEX;
-      }
-      if (meta.cards.length === 0) {
+      if (!Number.isInteger(meta.currentIndex) || meta.cards.length === 0) {
         meta.currentIndex = DRAFT_INDEX;
       }
       if (parsed.draftContent) {
@@ -306,6 +285,27 @@ document.addEventListener("DOMContentLoaded", () => {
     } catch (error) {
       console.warn("Unable to load presenter data.", error);
     }
+  };
+
+  const resetPresenterFlip = () => {
+    if (dom.presenterCard) {
+      dom.presenterCard.classList.remove("is-flipped");
+    }
+  };
+
+  const setAreaContent = (side, area, content) => {
+    if (presenterMode) {
+      return;
+    }
+    const activeCard = getActiveCard();
+    if (activeCard) {
+      activeCard.content = activeCard.content || { front: {}, back: {} };
+      activeCard.content[side] = activeCard.content[side] || {};
+      activeCard.content[side][area] = content;
+      return;
+    }
+    meta.draftContent[side] = meta.draftContent[side] || {};
+    meta.draftContent[side][area] = content;
   };
 
   const loadCardToForm = (index) => {
@@ -390,9 +390,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
       }
       updatePreview();
-      if (builderReady) {
-        persistBuilderState();
-      }
+      persistBuilderState();
     };
     document
       .querySelectorAll(`input[name="${name}"]`)
@@ -424,9 +422,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const loadDefaultCards = async (url) => {
     try {
-      const response = await fetch(url, {
-        cache: "no-store",
-      });
+      const response = await fetch(url, { cache: "no-store" });
       if (!response.ok) {
         throw new Error("Unable to load default flashcards.");
       }
@@ -462,31 +458,6 @@ document.addEventListener("DOMContentLoaded", () => {
     } catch (error) {
       console.warn("Unable to load flashcard topics.", error);
     }
-  };
-
-  const normalizeImageUrl = (value) => {
-    if (!value) {
-      return value;
-    }
-    try {
-      const url = new URL(value);
-      const fileMatch = url.pathname.match(/\/File:(.+)$/i);
-      const mediaMatch = url.pathname.match(/\/media\/File:(.+)$/i);
-      const filename = fileMatch ? fileMatch[1] : mediaMatch ? mediaMatch[1] : null;
-      if (filename && url.hostname.includes("wikipedia.org")) {
-        return `https://commons.wikimedia.org/wiki/Special:FilePath/${encodeURIComponent(
-          filename
-        )}`;
-      }
-      if (filename && url.hostname.includes("wikimedia.org")) {
-        return `https://commons.wikimedia.org/wiki/Special:FilePath/${encodeURIComponent(
-          filename
-        )}`;
-      }
-    } catch (error) {
-      return value;
-    }
-    return value;
   };
 
   const openContentModal = (mode, area) => {
@@ -540,6 +511,20 @@ document.addEventListener("DOMContentLoaded", () => {
     updatePreview();
     persistBuilderState();
     closeContentModal();
+  };
+
+  const loadReadme = async () => {
+    if (!dom.builderHelpContent) {
+      return;
+    }
+    try {
+      const response = await fetch("/api/readme", { cache: "no-store" });
+      if (response.ok) {
+        dom.builderHelpContent.textContent = await response.text();
+      }
+    } catch (error) {
+      dom.builderHelpContent.textContent = "Unable to load README content.";
+    }
   };
 
   const setupBuilder = () => {
@@ -636,29 +621,6 @@ document.addEventListener("DOMContentLoaded", () => {
       dom.contentCancel.addEventListener("click", closeContentModal);
     }
 
-    if (dom.builderHelpButton && dom.builderHelpModal) {
-      dom.builderHelpButton.addEventListener("click", async () => {
-        if (dom.builderHelpContent) {
-          try {
-            const response = await fetch("/api/readme", { cache: "no-store" });
-            if (response.ok) {
-              dom.builderHelpContent.textContent = await response.text();
-            }
-          } catch (error) {
-            dom.builderHelpContent.textContent =
-              "Unable to load README content.";
-          }
-        }
-        dom.builderHelpModal.showModal();
-      });
-    }
-
-    if (dom.builderHelpClose && dom.builderHelpModal) {
-      dom.builderHelpClose.addEventListener("click", () => {
-        dom.builderHelpModal.close();
-      });
-    }
-
     document.addEventListener("click", (event) => {
       const button = event.target.closest("[data-action]");
       if (!button) {
@@ -685,27 +647,33 @@ document.addEventListener("DOMContentLoaded", () => {
       });
     }
 
+    if (dom.builderHelpButton && dom.builderHelpModal) {
+      dom.builderHelpButton.addEventListener("click", async () => {
+        await loadReadme();
+        dom.builderHelpModal.showModal();
+      });
+    }
+
+    if (dom.builderHelpClose && dom.builderHelpModal) {
+      dom.builderHelpClose.addEventListener("click", () => {
+        dom.builderHelpModal.close();
+      });
+    }
+
     bindLayoutPreview("front-layout", '[data-preview="front"]');
     bindLayoutPreview("back-layout", '[data-preview="back"]');
 
-    builderReady = true;
     updatePreview();
     renderSavedCards();
   };
 
   const setupPresenter = () => {
-    const toggleFlip = () => {
-      if (dom.presenterCard) {
-        dom.presenterCard.classList.toggle("is-flipped");
-      }
-    };
-
     if (dom.presenterCard) {
       dom.presenterCard.addEventListener("click", (event) => {
         if (event.target.closest("button, a, input, textarea, select")) {
           return;
         }
-        toggleFlip();
+        dom.presenterCard.classList.toggle("is-flipped");
       });
     }
 
@@ -768,7 +736,6 @@ document.addEventListener("DOMContentLoaded", () => {
     if (dom.presenterFullscreenButton) {
       const updateFullscreenIcon = () => {
         const iconName = document.fullscreenElement ? "minimize-2" : "maximize-2";
-        const icon = dom.presenterFullscreenButton.querySelector("svg");
         dom.presenterFullscreenButton.innerHTML = "";
         const placeholder = document.createElement("i");
         placeholder.setAttribute("data-feather", iconName);
