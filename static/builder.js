@@ -619,6 +619,12 @@
           if (Number.isNaN(index)) {
             return;
           }
+          const confirmed = window.confirm(
+            "Remove this saved card?"
+          );
+          if (!confirmed) {
+            return;
+          }
           meta.cards.splice(index, 1);
           if (meta.currentIndex === index) {
             meta.currentIndex = DRAFT_INDEX;
