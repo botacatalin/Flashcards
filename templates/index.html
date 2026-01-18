@@ -409,6 +409,22 @@
         margin: 0;
       }
 
+      .card-actions {
+        display: flex;
+        gap: 0.5rem;
+        flex-wrap: wrap;
+        margin-top: 0.5rem;
+      }
+
+      .card-actions button {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0.35rem 0.6rem;
+        font-size: 0.8rem;
+        gap: 0.4rem;
+      }
+
       .saved-cards {
         margin-top: 1rem;
       }
@@ -577,7 +593,6 @@
         <header><strong id="content-modal-title">Add content</strong></header>
         <form method="dialog">
           <div id="text-content-label">
-            <label for="text-editor">Text content</label>
             <div id="text-editor"></div>
           </div>
           <label id="image-content-label">

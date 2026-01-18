@@ -17,6 +17,7 @@
     cardNameTarget: document.querySelector("[data-card-name]"),
     savedCardsGrid: document.getElementById("saved-cards-grid"),
     saveCardButton: document.getElementById("save-card"),
+    newCardButton: document.getElementById("new-card"),
     saveJsonButton: document.getElementById("save-json"),
     buildButton: document.getElementById("build-flashcard"),
     buildInput: document.getElementById("build-json"),
@@ -162,15 +163,13 @@
     if (activeCard) {
       setCardName(activeCard.name);
       setPreviewLayouts(activeCard.layouts.front, activeCard.layouts.back);
-      renderContent();
-      return;
+    } else {
+      setCardName(dom.cardNameInput ? dom.cardNameInput.value.trim() : "");
+      setPreviewLayouts(
+        getSelectedLayout("front-layout"),
+        getSelectedLayout("back-layout")
+      );
     }
-
-    setCardName(dom.cardNameInput ? dom.cardNameInput.value.trim() : "");
-    setPreviewLayouts(
-      getSelectedLayout("front-layout"),
-      getSelectedLayout("back-layout")
-    );
     renderContent();
   };
 
@@ -502,6 +501,12 @@
         meta.cards.push(buildCardMeta());
         renderSavedCards();
         persistBuilderState();
+        resetDraft();
+      });
+    }
+
+    if (dom.newCardButton) {
+      dom.newCardButton.addEventListener("click", () => {
         resetDraft();
       });
     }

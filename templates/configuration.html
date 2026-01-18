@@ -6,6 +6,17 @@
 />
 
 <form>
+  <div class="card-actions">
+    <button type="button" id="save-card">
+      <i data-feather="save"></i>
+      Save Card
+    </button>
+    <button type="button" id="new-card" class="secondary">
+      <i data-feather="plus-circle"></i>
+      New Card
+    </button>
+  </div>
+
   <label>
     Card name
     <input id="card-name" type="text" placeholder="e.g., My Flashcard Topic" />
@@ -94,11 +105,6 @@
       </article>
     </section>
   </div>
-
-  <button type="button" id="save-card">
-    <i data-feather="save"></i>
-    Save Card
-  </button>
 
   <section class="saved-cards">
     <header><strong>Saved Cards</strong></header>
