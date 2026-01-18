@@ -1,5 +1,6 @@
-from flask import Flask, render_template, redirect, url_for
+from flask import Flask, render_template, redirect, url_for, jsonify
 import config
+import os
 
 
 def create_app():
@@ -23,6 +24,23 @@ def create_app():
     @app.route("/presenter")
     def presenter():
         return render_template("presenter.html")
+
+    @app.route("/api/flashcards")
+    def flashcard_index():
+        base_dir = os.path.join(app.static_folder, "flashcards")
+        entries = []
+        if os.path.isdir(base_dir):
+            for filename in sorted(os.listdir(base_dir)):
+                if not filename.endswith(".json"):
+                    continue
+                name = os.path.splitext(filename)[0].replace("-", " ").title()
+                entries.append(
+                    {
+                        "label": name,
+                        "url": url_for("static", filename=f"flashcards/{filename}"),
+                    }
+                )
+        return jsonify(entries)
 
     return app
 

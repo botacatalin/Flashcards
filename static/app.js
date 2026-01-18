@@ -29,6 +29,7 @@ document.addEventListener("DOMContentLoaded", () => {
     previewNext: document.getElementById("preview-next"),
     presenterLoadButton: document.getElementById("presenter-load"),
     presenterLoadInput: document.getElementById("presenter-json"),
+    presenterDefaultSelect: document.getElementById("presenter-default"),
     presenterCard: document.getElementById("presenter-card"),
     presenterFullscreenButton: document.getElementById("presenter-fullscreen"),
     frontPreview: document.querySelector('[data-preview="front"]'),
@@ -406,6 +407,48 @@ document.addEventListener("DOMContentLoaded", () => {
     return [];
   };
 
+  const loadDefaultCards = async (url) => {
+    try {
+      const response = await fetch(url, {
+        cache: "no-store",
+      });
+      if (!response.ok) {
+        throw new Error("Unable to load default flashcards.");
+      }
+      const data = await response.json();
+      const cards = extractCardsFromData(data);
+      storePresenterData(cards);
+    } catch (error) {
+      console.warn("Unable to load default flashcards.", error);
+    }
+  };
+
+  const loadFlashcardTopics = async () => {
+    if (!dom.presenterDefaultSelect) {
+      return;
+    }
+    try {
+      const response = await fetch("/api/flashcards", { cache: "no-store" });
+      if (!response.ok) {
+        throw new Error("Unable to load flashcard list.");
+      }
+      const topics = await response.json();
+      dom.presenterDefaultSelect.innerHTML = "";
+      const placeholder = document.createElement("option");
+      placeholder.value = "";
+      placeholder.textContent = "Select topic";
+      dom.presenterDefaultSelect.appendChild(placeholder);
+      topics.forEach((topic) => {
+        const option = document.createElement("option");
+        option.value = topic.url;
+        option.textContent = topic.label;
+        dom.presenterDefaultSelect.appendChild(option);
+      });
+    } catch (error) {
+      console.warn("Unable to load flashcard topics.", error);
+    }
+  };
+
   const normalizeImageUrl = (value) => {
     if (!value) {
       return value;
@@ -640,11 +683,24 @@ document.addEventListener("DOMContentLoaded", () => {
           }
           const cards = extractCardsFromData(data);
           storePresenterData(cards);
+          if (dom.presenterDefaultSelect) {
+            dom.presenterDefaultSelect.value = "";
+          }
         } catch (error) {
           console.warn("Unable to load presenter JSON.", error);
         } finally {
           dom.presenterLoadInput.value = "";
         }
+      });
+    }
+
+    if (dom.presenterDefaultSelect) {
+      dom.presenterDefaultSelect.addEventListener("change", (event) => {
+        const url = event.target.value;
+        if (!url) {
+          return;
+        }
+        loadDefaultCards(url);
       });
     }
 
@@ -672,6 +728,18 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     if (dom.presenterFullscreenButton) {
+      const updateFullscreenIcon = () => {
+        const iconName = document.fullscreenElement ? "minimize-2" : "maximize-2";
+        const icon = dom.presenterFullscreenButton.querySelector("svg");
+        dom.presenterFullscreenButton.innerHTML = "";
+        const placeholder = document.createElement("i");
+        placeholder.setAttribute("data-feather", iconName);
+        dom.presenterFullscreenButton.appendChild(placeholder);
+        if (window.feather) {
+          window.feather.replace({ element: dom.presenterFullscreenButton });
+        }
+      };
+
       dom.presenterFullscreenButton.addEventListener("click", async () => {
         if (!document.fullscreenElement) {
           await document.documentElement.requestFullscreen();
@@ -679,9 +747,13 @@ document.addEventListener("DOMContentLoaded", () => {
           await document.exitFullscreen();
         }
       });
+
+      document.addEventListener("fullscreenchange", updateFullscreenIcon);
+      updateFullscreenIcon();
     }
 
     loadPresenterData();
+    loadFlashcardTopics();
     updatePreview();
   };
 

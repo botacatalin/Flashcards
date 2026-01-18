@@ -1,0 +1,29 @@
+{
+  "version": 1,
+  "cards": [
+    {
+      "name": "Happy",
+      "layouts": {"front": "full", "back": "full"},
+      "content": {
+        "front": {"area-1": {"type": "text", "value": "Happy"}},
+        "back": {"area-1": {"type": "text", "value": "😀"}}
+      }
+    },
+    {
+      "name": "Sad",
+      "layouts": {"front": "full", "back": "full"},
+      "content": {
+        "front": {"area-1": {"type": "text", "value": "Sad"}},
+        "back": {"area-1": {"type": "text", "value": "😢"}}
+      }
+    },
+    {
+      "name": "Surprised",
+      "layouts": {"front": "full", "back": "full"},
+      "content": {
+        "front": {"area-1": {"type": "text", "value": "Surprised"}},
+        "back": {"area-1": {"type": "text", "value": "😮"}}
+      }
+    }
+  ]
+}
