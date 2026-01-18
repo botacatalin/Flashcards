@@ -1,0 +1,143 @@
+.presenter-card {
+  width: min(960px, 100%);
+  perspective: 1200px;
+  cursor: pointer;
+}
+
+.presenter-card-inner {
+  position: relative;
+  min-height: 440px;
+  transition: transform 0.7s ease;
+  transform-style: preserve-3d;
+}
+
+.presenter-card.is-flipped .presenter-card-inner {
+  transform: rotateY(180deg);
+}
+
+.presenter-face {
+  position: absolute;
+  inset: 0;
+  backface-visibility: hidden;
+  border-radius: 18px;
+  padding: 1.5rem;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.9)),
+    repeating-linear-gradient(
+      45deg,
+      rgba(15, 23, 42, 0.03),
+      rgba(15, 23, 42, 0.03) 6px,
+      rgba(15, 23, 42, 0.06) 6px,
+      rgba(15, 23, 42, 0.06) 12px
+    );
+  border: 1px solid rgba(15, 23, 42, 0.16);
+  box-shadow:
+    0 12px 30px rgba(15, 23, 42, 0.12),
+    0 2px 6px rgba(15, 23, 42, 0.1);
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.presenter-back {
+  transform: rotateY(180deg);
+  background: #fbf7ef;
+}
+
+.presenter-label {
+  text-transform: uppercase;
+  letter-spacing: 0.24em;
+  font-size: 0.6rem;
+  color: #8b6f4b;
+}
+
+.preview-layout {
+  display: grid;
+  gap: 0.75rem;
+  min-height: 260px;
+}
+
+.preview-layout[data-layout="full"] {
+  grid-template-columns: 1fr;
+  grid-template-rows: 1fr;
+}
+
+.preview-layout[data-layout="split-half"] {
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr;
+}
+
+.preview-layout[data-layout="split-vertical"] {
+  grid-template-columns: 1fr;
+  grid-template-rows: 1fr 1fr;
+}
+
+.preview-layout[data-layout="split-mixed"] {
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  grid-template-areas:
+    "left right-top"
+    "left right-bottom";
+}
+
+.preview-layout[data-layout="split-mixed"] .area-1 {
+  grid-area: left;
+}
+
+.preview-layout[data-layout="split-mixed"] .area-2 {
+  grid-area: right-top;
+}
+
+.preview-layout[data-layout="split-mixed"] .area-3 {
+  grid-area: right-bottom;
+}
+
+.preview-layout[data-layout="full"] .area-2,
+.preview-layout[data-layout="full"] .area-3,
+.preview-layout[data-layout="split-half"] .area-3,
+.preview-layout[data-layout="split-vertical"] .area-3 {
+  display: none;
+}
+
+.layout-area {
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.6);
+  border: 1px dashed rgba(111, 78, 55, 0.25);
+  padding: 0.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.area-content {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  flex: 1;
+  min-height: 120px;
+}
+
+.area-content img {
+  max-width: 100%;
+  max-height: 220px;
+  border-radius: 12px;
+  object-fit: cover;
+  filter: sepia(0.15);
+}
+
+.area-content p {
+  margin: 0;
+  font-size: 1.1rem;
+  color: #3f2a1d;
+  font-family: "Georgia", "Times New Roman", serif;
+}
+
+@media (max-width: 900px) {
+  .presenter-card-inner {
+    min-height: 420px;
+  }
+}

@@ -1,6 +1,7 @@
 document.addEventListener("DOMContentLoaded", () => {
   const STORAGE_KEY = "flashcard-builder-state";
   const PRESENTER_KEY = "flashcard-presenter-data";
+  const PRESENTER_STYLE_KEY = "flashcard-presenter-style";
   const DEFAULT_LAYOUT = "full";
   const DRAFT_INDEX = -1;
 
@@ -25,6 +26,8 @@ document.addEventListener("DOMContentLoaded", () => {
     presenterLoadButton: document.getElementById("presenter-load"),
     presenterLoadInput: document.getElementById("presenter-json"),
     presenterDefaultSelect: document.getElementById("presenter-default"),
+    presenterStyleSelect: document.getElementById("presenter-style"),
+    presenterStyleLink: document.getElementById("presenter-style-link"),
     presenterCard: document.getElementById("presenter-card"),
     presenterFullscreenButton: document.getElementById("presenter-fullscreen"),
     presenterShell: document.getElementById("presenter-shell"),
@@ -193,6 +196,17 @@ document.addEventListener("DOMContentLoaded", () => {
       getSelectedLayout("back-layout")
     );
     renderContent();
+  };
+
+  const applyPresenterStyle = (style) => {
+    const value = style || "minimal";
+    if (dom.presenterStyleSelect) {
+      dom.presenterStyleSelect.value = value;
+    }
+    if (dom.presenterStyleLink) {
+      dom.presenterStyleLink.href = `/static/presenter-style-${value}.css`;
+    }
+    localStorage.setItem(PRESENTER_STYLE_KEY, value);
   };
 
   const renderSavedCards = () => {
@@ -759,6 +773,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
     loadPresenterData();
     loadFlashcardTopics();
+    applyPresenterStyle(localStorage.getItem(PRESENTER_STYLE_KEY));
+    if (dom.presenterStyleSelect) {
+      dom.presenterStyleSelect.addEventListener("change", (event) => {
+        applyPresenterStyle(event.target.value);
+      });
+    }
     updatePreview();
   };
 
