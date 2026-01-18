@@ -422,6 +422,32 @@
       .saved-cards-grid article {
         margin: 0;
         cursor: pointer;
+        position: relative;
+        border: 1px solid var(--pico-muted-border-color);
+        border-radius: var(--pico-border-radius);
+        padding: 0.6rem;
+      }
+
+      .saved-card-remove {
+        position: absolute;
+        top: 0.25rem;
+        right: 0.25rem;
+        border: none;
+        background: transparent;
+        color: #b91c1c;
+        font-size: 1rem;
+        line-height: 1;
+        width: 1.4rem;
+        height: 1.4rem;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 999px;
+      }
+
+      .saved-card-remove:hover,
+      .saved-card-remove:focus {
+        background: rgba(185, 28, 28, 0.08);
       }
 
       /* Responsive: stack panels on smaller screens */

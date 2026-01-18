@@ -222,12 +222,20 @@
     }
     meta.cards.forEach((card, index) => {
       const item = document.createElement("article");
+      const removeButton = document.createElement("button");
       const name = document.createElement("small");
       name.textContent = card.name;
       item.dataset.index = String(index);
       if (index === meta.currentIndex) {
         item.setAttribute("aria-current", "true");
       }
+      removeButton.type = "button";
+      removeButton.className = "saved-card-remove";
+      removeButton.setAttribute("aria-label", "Remove card");
+      removeButton.setAttribute("title", "Remove card");
+      removeButton.dataset.action = "remove-card";
+      removeButton.innerHTML = "<span aria-hidden=\"true\">×</span>";
+      item.appendChild(removeButton);
       item.appendChild(name);
       dom.savedCardsGrid.appendChild(item);
     });
@@ -601,6 +609,27 @@
 
     if (dom.savedCardsGrid) {
       dom.savedCardsGrid.addEventListener("click", (event) => {
+        const removeButton = event.target.closest("[data-action=\"remove-card\"]");
+        if (removeButton) {
+          const item = removeButton.closest("[data-index]");
+          if (!item) {
+            return;
+          }
+          const index = Number(item.dataset.index);
+          if (Number.isNaN(index)) {
+            return;
+          }
+          meta.cards.splice(index, 1);
+          if (meta.currentIndex === index) {
+            meta.currentIndex = DRAFT_INDEX;
+          } else if (meta.currentIndex > index) {
+            meta.currentIndex -= 1;
+          }
+          renderSavedCards();
+          updatePreview();
+          persistBuilderState();
+          return;
+        }
         const item = event.target.closest("[data-index]");
         if (!item) {
           return;
