@@ -1,6 +1,16 @@
 (() => {
   const PRESENTER_KEY = "flashcard-presenter-data";
   const PRESENTER_STYLE_KEY = "flashcard-presenter-style";
+  const DEFAULT_TOPICS = [
+    {
+      label: "Emotions",
+      url: "./static/flashcards/flashcards-emotions.json",
+    },
+    {
+      label: "Opposites",
+      url: "./static/flashcards/flashcards-opposites.json",
+    },
+  ];
 
   const meta = {
     version: 1,
@@ -195,30 +205,21 @@
     }
   };
 
-  const loadFlashcardTopics = async () => {
+  const loadFlashcardTopics = () => {
     if (!dom.presenterDefaultSelect) {
       return;
     }
-    try {
-      const response = await fetch("/api/flashcards", { cache: "no-store" });
-      if (!response.ok) {
-        throw new Error("Unable to load flashcard list.");
-      }
-      const topics = await response.json();
-      dom.presenterDefaultSelect.innerHTML = "";
-      const placeholder = document.createElement("option");
-      placeholder.value = "";
-      placeholder.textContent = "Select topic";
-      dom.presenterDefaultSelect.appendChild(placeholder);
-      topics.forEach((topic) => {
-        const option = document.createElement("option");
-        option.value = topic.url;
-        option.textContent = topic.label;
-        dom.presenterDefaultSelect.appendChild(option);
-      });
-    } catch (error) {
-      console.warn("Unable to load flashcard topics.", error);
-    }
+    dom.presenterDefaultSelect.innerHTML = "";
+    const placeholder = document.createElement("option");
+    placeholder.value = "";
+    placeholder.textContent = "Select topic";
+    dom.presenterDefaultSelect.appendChild(placeholder);
+    DEFAULT_TOPICS.forEach((topic) => {
+      const option = document.createElement("option");
+      option.value = topic.url;
+      option.textContent = topic.label;
+      dom.presenterDefaultSelect.appendChild(option);
+    });
   };
 
   const applyPresenterStyle = (style) => {
@@ -227,7 +228,7 @@
       dom.presenterStyleSelect.value = value;
     }
     if (dom.presenterStyleLink) {
-      dom.presenterStyleLink.href = `/static/presenter-style-${value}.css`;
+      dom.presenterStyleLink.href = `./static/presenter-style-${value}.css`;
     }
     localStorage.setItem(PRESENTER_STYLE_KEY, value);
   };

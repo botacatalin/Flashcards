@@ -558,7 +558,7 @@
           <li>
             <a
               class="secondary icon-only presenter-icon"
-              href="/presenter"
+              href="/presenter/index.html"
               title="Open presenter"
               aria-label="Open presenter"
             >
@@ -577,14 +577,292 @@
           </summary>
 
           <div class="panel-content">
-            {% include "configuration.html" %}
+            <input
+  id="build-json"
+  type="file"
+  accept="application/json"
+  hidden
+/>
+
+<form>
+  <div class="card-actions">
+    <button type="button" id="save-card">
+      <i data-feather="save"></i>
+      Save Card
+    </button>
+    <button type="button" id="new-card" class="secondary">
+      <i data-feather="plus-circle"></i>
+      New Card
+    </button>
+  </div>
+
+  <label>
+    Card name
+    <input id="card-name" type="text" placeholder="e.g., My Flashcard Topic" />
+  </label>
+
+  <div class="card-sections">
+    <section class="card-section">
+      <article>
+        <header><strong>Card Front</strong></header>
+        <fieldset class="layout-options">
+          <legend>Layout</legend>
+          <label>
+            <input checked name="front-layout" type="radio" value="full" />
+            <svg class="layout-icon" viewBox="0 0 34 24" aria-hidden="true">
+              <rect x="2" y="2" width="30" height="20" fill="none" stroke="currentColor" />
+              <rect x="4" y="5" width="26" height="14" fill="currentColor" opacity="0.15" />
+            </svg>
+          </label>
+          <label>
+            <input name="front-layout" type="radio" value="split-half" />
+            <svg class="layout-icon" viewBox="0 0 34 24" aria-hidden="true">
+              <rect x="2" y="2" width="30" height="20" fill="none" stroke="currentColor" />
+              <rect x="4" y="5" width="12" height="14" fill="currentColor" opacity="0.15" />
+              <rect x="18" y="5" width="12" height="14" fill="currentColor" opacity="0.15" />
+            </svg>
+          </label>
+          <label>
+            <input name="front-layout" type="radio" value="split-vertical" />
+            <svg class="layout-icon" viewBox="0 0 34 24" aria-hidden="true">
+              <rect x="2" y="2" width="30" height="20" fill="none" stroke="currentColor" />
+              <rect x="4" y="5" width="26" height="6" fill="currentColor" opacity="0.15" />
+              <rect x="4" y="13" width="26" height="6" fill="currentColor" opacity="0.15" />
+            </svg>
+          </label>
+          <label>
+            <input name="front-layout" type="radio" value="split-mixed" />
+            <svg class="layout-icon" viewBox="0 0 34 24" aria-hidden="true">
+              <rect x="2" y="2" width="30" height="20" fill="none" stroke="currentColor" />
+              <rect x="4" y="5" width="12" height="14" fill="currentColor" opacity="0.15" />
+              <rect x="18" y="5" width="12" height="6" fill="currentColor" opacity="0.15" />
+              <rect x="18" y="13" width="12" height="6" fill="currentColor" opacity="0.15" />
+            </svg>
+          </label>
+        </fieldset>
+      </article>
+    </section>
+
+    <section class="card-section">
+      <article>
+        <header><strong>Card Back</strong></header>
+        <fieldset class="layout-options">
+          <legend>Layout</legend>
+          <label>
+            <input checked name="back-layout" type="radio" value="full" />
+            <svg class="layout-icon" viewBox="0 0 34 24" aria-hidden="true">
+              <rect x="2" y="2" width="30" height="20" fill="none" stroke="currentColor" />
+              <rect x="4" y="5" width="26" height="14" fill="currentColor" opacity="0.15" />
+            </svg>
+          </label>
+          <label>
+            <input name="back-layout" type="radio" value="split-half" />
+            <svg class="layout-icon" viewBox="0 0 34 24" aria-hidden="true">
+              <rect x="2" y="2" width="30" height="20" fill="none" stroke="currentColor" />
+              <rect x="4" y="5" width="12" height="14" fill="currentColor" opacity="0.15" />
+              <rect x="18" y="5" width="12" height="14" fill="currentColor" opacity="0.15" />
+            </svg>
+          </label>
+          <label>
+            <input name="back-layout" type="radio" value="split-vertical" />
+            <svg class="layout-icon" viewBox="0 0 34 24" aria-hidden="true">
+              <rect x="2" y="2" width="30" height="20" fill="none" stroke="currentColor" />
+              <rect x="4" y="5" width="26" height="6" fill="currentColor" opacity="0.15" />
+              <rect x="4" y="13" width="26" height="6" fill="currentColor" opacity="0.15" />
+            </svg>
+          </label>
+          <label>
+            <input name="back-layout" type="radio" value="split-mixed" />
+            <svg class="layout-icon" viewBox="0 0 34 24" aria-hidden="true">
+              <rect x="2" y="2" width="30" height="20" fill="none" stroke="currentColor" />
+              <rect x="4" y="5" width="12" height="14" fill="currentColor" opacity="0.15" />
+              <rect x="18" y="5" width="12" height="6" fill="currentColor" opacity="0.15" />
+              <rect x="18" y="13" width="12" height="6" fill="currentColor" opacity="0.15" />
+            </svg>
+          </label>
+        </fieldset>
+      </article>
+    </section>
+  </div>
+
+  <section class="saved-cards">
+    <header><strong>Saved Cards</strong></header>
+    <div class="saved-cards-grid" id="saved-cards-grid"></div>
+  </section>
+</form>
+
           </div>
         </details>
       </aside>
 
       <!-- RIGHT: PREVIEW -->
       <section class="panel">
-        {% include "preview.html" %}
+        <div class="panel-header">
+  <h2>Preview</h2>
+</div>
+
+<div class="panel-content">
+  <article class="preview-card">
+    <header><strong>Flashcard Preview</strong></header>
+    <div class="preview-sides">
+      <div class="preview-side">
+        <p class="preview-label">Front</p>
+        <article class="preview-card-face">
+          <p class="preview-name"><strong data-card-name>Card Name</strong></p>
+          <div class="preview-layout" data-preview="front" data-layout="full">
+            <div class="layout-area area-1" data-side="front" data-area="area-1">
+              <div class="area-content"></div>
+              <div class="area-actions">
+                <button
+                  class="secondary icon-only"
+                  type="button"
+                  title="Text"
+                  aria-label="Text"
+                  data-action="text"
+                >
+                  <i data-feather="type"></i>
+                </button>
+                <button
+                  class="secondary icon-only"
+                  type="button"
+                  title="Image"
+                  aria-label="Image"
+                  data-action="image"
+                >
+                  <i data-feather="image"></i>
+                </button>
+              </div>
+            </div>
+            <div class="layout-area area-2" data-side="front" data-area="area-2">
+              <div class="area-content"></div>
+              <div class="area-actions">
+                <button
+                  class="secondary icon-only"
+                  type="button"
+                  title="Text"
+                  aria-label="Text"
+                  data-action="text"
+                >
+                  <i data-feather="type"></i>
+                </button>
+                <button
+                  class="secondary icon-only"
+                  type="button"
+                  title="Image"
+                  aria-label="Image"
+                  data-action="image"
+                >
+                  <i data-feather="image"></i>
+                </button>
+              </div>
+            </div>
+            <div class="layout-area area-3" data-side="front" data-area="area-3">
+              <div class="area-content"></div>
+              <div class="area-actions">
+                <button
+                  class="secondary icon-only"
+                  type="button"
+                  title="Text"
+                  aria-label="Text"
+                  data-action="text"
+                >
+                  <i data-feather="type"></i>
+                </button>
+                <button
+                  class="secondary icon-only"
+                  type="button"
+                  title="Image"
+                  aria-label="Image"
+                  data-action="image"
+                >
+                  <i data-feather="image"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </article>
+      </div>
+
+      <div class="preview-side">
+        <p class="preview-label">Back</p>
+        <article class="preview-card-face">
+          <div class="preview-layout" data-preview="back" data-layout="full">
+            <div class="layout-area area-1" data-side="back" data-area="area-1">
+              <div class="area-content"></div>
+              <div class="area-actions">
+                <button
+                  class="secondary icon-only"
+                  type="button"
+                  title="Text"
+                  aria-label="Text"
+                  data-action="text"
+                >
+                  <i data-feather="type"></i>
+                </button>
+                <button
+                  class="secondary icon-only"
+                  type="button"
+                  title="Image"
+                  aria-label="Image"
+                  data-action="image"
+                >
+                  <i data-feather="image"></i>
+                </button>
+              </div>
+            </div>
+            <div class="layout-area area-2" data-side="back" data-area="area-2">
+              <div class="area-content"></div>
+              <div class="area-actions">
+                <button
+                  class="secondary icon-only"
+                  type="button"
+                  title="Text"
+                  aria-label="Text"
+                  data-action="text"
+                >
+                  <i data-feather="type"></i>
+                </button>
+                <button
+                  class="secondary icon-only"
+                  type="button"
+                  title="Image"
+                  aria-label="Image"
+                  data-action="image"
+                >
+                  <i data-feather="image"></i>
+                </button>
+              </div>
+            </div>
+            <div class="layout-area area-3" data-side="back" data-area="area-3">
+              <div class="area-content"></div>
+              <div class="area-actions">
+                <button
+                  class="secondary icon-only"
+                  type="button"
+                  title="Text"
+                  aria-label="Text"
+                  data-action="text"
+                >
+                  <i data-feather="type"></i>
+                </button>
+                <button
+                  class="secondary icon-only"
+                  type="button"
+                  title="Image"
+                  aria-label="Image"
+                  data-action="image"
+                >
+                  <i data-feather="image"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </article>
+      </div>
+    </div>
+  </article>
+</div>
+
       </section>
     </div>
 
@@ -622,6 +900,6 @@
     </dialog>
 
     <script src="https://unpkg.com/pell@1.0.6/dist/pell.min.js"></script>
-    <script src="{{ url_for('static', filename='app.js') }}"></script>
+    <script src="./static/builder.js"></script>
   </body>
 </html>

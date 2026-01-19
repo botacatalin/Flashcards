@@ -13,7 +13,7 @@
     <link
       id="presenter-style-link"
       rel="stylesheet"
-      href="/static/presenter-style-minimal.css"
+      href="./static/presenter-style-minimal.css"
     />
 
     <!-- Feather Icons -->
@@ -144,7 +144,7 @@
               aria-label="Present flashcard"
             >
               <i data-feather="folder-plus"></i>
-              Present
+              Load Flashcards
             </button>
           </li>
           <li>
@@ -176,7 +176,7 @@
           <li>
             <a
               class="secondary icon-only"
-              href="/builder"
+              href="/builder/index.html"
               title="Open builder"
               aria-label="Open builder"
             >
@@ -255,6 +255,6 @@
       </section>
     </main>
 
-    <script src="{{ url_for('static', filename='app.js') }}"></script>
+    <script src="./static/presenter.js"></script>
   </body>
 </html>

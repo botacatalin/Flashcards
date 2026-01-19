@@ -347,18 +347,12 @@
     return [];
   };
 
-  const loadReadme = async () => {
+  const loadReadme = () => {
     if (!dom.builderHelpContent) {
       return;
     }
-    try {
-      const response = await fetch("/api/readme", { cache: "no-store" });
-      if (response.ok) {
-        dom.builderHelpContent.textContent = await response.text();
-      }
-    } catch (error) {
-      dom.builderHelpContent.textContent = "Unable to load README content.";
-    }
+    dom.builderHelpContent.textContent =
+      "Build your flashcards, then export the JSON to present them in the standalone viewer.";
   };
 
   let pellEditor = null;
@@ -552,7 +546,7 @@
             cards: cards.map(normalizeCard),
             currentIndex: 0,
           }));
-          window.location.href = "/presenter";
+          window.location.href = "/presenter/index.html";
         } catch (error) {
           console.warn("Unable to import flashcards.", error);
         } finally {

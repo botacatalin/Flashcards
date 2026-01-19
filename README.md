@@ -1,19 +1,24 @@
 # Overview
-Flashcard Builder is a two‑part tool: the builder lets you design two‑sided flashcards with layouts, text, and images, then exports the card metadata as JSON, while the presenter loads that JSON to display the flashcards in a polished flip‑card viewer.
+Flashcard Builder is a two-part tool: the builder lets you design two-sided flashcards with layouts, text, and images, then exports JSON data, while the presenter loads that JSON to display the flashcards in a flip-card viewer.
 
-The application has two components
-- The Builder lets you create flashcard content.
-- The Presenter lets you view that content.
+# Project structure
+- `backend/` contains the Flask app used as a simple static file server.
+- `frontend/builder/` is the static builder site (`index.html` + `static/` assets).
+- `frontend/presenter/` is the static presenter site (`index.html` + `static/` assets).
 
-# Builder includes two main areas:
-- Configuration area – used to define general settings such as the flashcard layout and card name.
-- Preview area – where you customize and visualize the front and back of the flashcard.
-- Exporting the flashcard data is done in a json format that can be later imported in the presenter.
------
+# Running locally
+- Builder: `python backend/app.py`, then visit `http://localhost:5000/builder/index.html`.
+- Presenter: open `frontend/presenter/index.html` directly or visit `http://localhost:5000/presenter/index.html`.
+
+# Builder areas
+- Configuration area: define flashcard layout and card name.
+- Preview area: customize and visualize the front and back.
+- Export data as JSON for the presenter.
+
 # Functionality
-- Load Flashcard button - Allows the user to upload a json containing flashcards data.
-- Export Flashcard button - Allows the user to save as json the flashcards they build.
-- New Projects button - Removes everything. Start over.
+- Load Flashcard button: upload a JSON file containing flashcards data.
+- Export Flashcard button: save flashcards as JSON.
+- New Projects button: remove everything and start over.
 
-© 2026 nodes.ro 
-Contact: nodes.ro@proton.eu  
+© 2026 nodes.ro
+Contact: nodes.ro@proton.eu
