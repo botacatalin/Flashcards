@@ -2,7 +2,7 @@
   "version": 1,
   "cards": [
     {
-      "name": "Clocks: Learning Time",
+      "name": "Opposites",
       "layouts": {
         "front": "full",
         "back": "full"
@@ -10,20 +10,20 @@
       "content": {
         "front": {
           "area-1": {
-            "type": "image",
-            "value": "./static/flashcards/flashcards-clock/12_00.png"
+            "type": "text",
+            "value": "<h1>Hot</h1>"
           }
         },
         "back": {
           "area-1": {
             "type": "text",
-            "value": "<h1>12:00</h1>"
+            "value": "<h1>Cold</h1>"
           }
         }
       }
     },
     {
-      "name": "Clocks: Learning Time",
+      "name": "Opposites",
       "layouts": {
         "front": "full",
         "back": "full"
@@ -31,20 +31,20 @@
       "content": {
         "front": {
           "area-1": {
-            "type": "image",
-            "value": "./static/flashcards/flashcards-clock/1_30.png"
+            "type": "text",
+            "value": "<h1>Big</h1>"
           }
         },
         "back": {
           "area-1": {
             "type": "text",
-            "value": "<h1>1:30</h1>"
+            "value": "<h1>Small</h1>"
           }
         }
       }
     },
     {
-      "name": "Clocks: Learning Time",
+      "name": "Opposites",
       "layouts": {
         "front": "full",
         "back": "full"
@@ -52,20 +52,20 @@
       "content": {
         "front": {
           "area-1": {
-            "type": "image",
-            "value": "./static/flashcards/flashcards-clock/1_45.png"
+            "type": "text",
+            "value": "<h1>Fast</h1>"
           }
         },
         "back": {
           "area-1": {
             "type": "text",
-            "value": "<h1>1:45</h1>"
+            "value": "<h1>Slow</h1>"
           }
         }
       }
     },
     {
-      "name": "Clocks: Learning Time",
+      "name": "Opposites",
       "layouts": {
         "front": "full",
         "back": "full"
@@ -73,20 +73,20 @@
       "content": {
         "front": {
           "area-1": {
-            "type": "image",
-            "value": "./static/flashcards/flashcards-clock/1_55.png"
+            "type": "text",
+            "value": "<h1>Up</h1>"
           }
         },
         "back": {
           "area-1": {
             "type": "text",
-            "value": "<h1>1:55</h1>"
+            "value": "<h1>Down</h1>"
           }
         }
       }
     },
     {
-      "name": "Clocks: Learning Time",
+      "name": "Opposites",
       "layouts": {
         "front": "full",
         "back": "full"
@@ -94,20 +94,20 @@
       "content": {
         "front": {
           "area-1": {
-            "type": "image",
-            "value": "./static/flashcards/flashcards-clock/2_55.png"
+            "type": "text",
+            "value": "<h1>Happy</h1>"
           }
         },
         "back": {
           "area-1": {
             "type": "text",
-            "value": "<h1>2:55</h1>"
+            "value": "<h1>Sad</h1>"
           }
         }
       }
     },
     {
-      "name": "Clocks: Learning Time",
+      "name": "Opposites",
       "layouts": {
         "front": "full",
         "back": "full"
@@ -115,20 +115,20 @@
       "content": {
         "front": {
           "area-1": {
-            "type": "image",
-            "value": "./static/flashcards/flashcards-clock/3_00.png"
+            "type": "text",
+            "value": "<h1>Open</h1>"
           }
         },
         "back": {
           "area-1": {
             "type": "text",
-            "value": "<h1>3:00</h1>"
+            "value": "<h1>Closed</h1>"
           }
         }
       }
     },
     {
-      "name": "Clocks: Learning Time",
+      "name": "Opposites",
       "layouts": {
         "front": "full",
         "back": "full"
@@ -136,20 +136,20 @@
       "content": {
         "front": {
           "area-1": {
-            "type": "image",
-            "value": "./static/flashcards/flashcards-clock/4_10.png"
+            "type": "text",
+            "value": "<h1>Full</h1>"
           }
         },
         "back": {
           "area-1": {
             "type": "text",
-            "value": "<h1>4:10</h1>"
+            "value": "<h1>Empty</h1>"
           }
         }
       }
     },
     {
-      "name": "Clocks: Learning Time",
+      "name": "Opposites",
       "layouts": {
         "front": "full",
         "back": "full"
@@ -157,20 +157,20 @@
       "content": {
         "front": {
           "area-1": {
-            "type": "image",
-            "value": "./static/flashcards/flashcards-clock/6_00.png"
+            "type": "text",
+            "value": "<h1>Light</h1>"
           }
         },
         "back": {
           "area-1": {
             "type": "text",
-            "value": "<h1>6:00</h1>"
+            "value": "<h1>Dark</h1>"
           }
         }
       }
     },
     {
-      "name": "Clocks: Learning Time",
+      "name": "Opposites",
       "layouts": {
         "front": "full",
         "back": "full"
@@ -178,20 +178,20 @@
       "content": {
         "front": {
           "area-1": {
-            "type": "image",
-            "value": "./static/flashcards/flashcards-clock/6_30.png"
+            "type": "text",
+            "value": "<h1>Near</h1>"
           }
         },
         "back": {
           "area-1": {
             "type": "text",
-            "value": "<h1>6:30</h1>"
+            "value": "<h1>Far</h1>"
           }
         }
       }
     },
     {
-      "name": "Clocks: Learning Time",
+      "name": "Opposites",
       "layouts": {
         "front": "full",
         "back": "full"
@@ -199,20 +199,20 @@
       "content": {
         "front": {
           "area-1": {
-            "type": "image",
-            "value": "./static/flashcards/flashcards-clock/8_00.png"
+            "type": "text",
+            "value": "<h1>Day</h1>"
           }
         },
         "back": {
           "area-1": {
             "type": "text",
-            "value": "<h1>8:00</h1>"
+            "value": "<h1>Night</h1>"
           }
         }
       }
     },
     {
-      "name": "Clocks: Learning Time",
+      "name": "Opposites",
       "layouts": {
         "front": "full",
         "back": "full"
@@ -220,20 +220,20 @@
       "content": {
         "front": {
           "area-1": {
-            "type": "image",
-            "value": "./static/flashcards/flashcards-clock/9_03.png"
+            "type": "text",
+            "value": "<h1>Wet</h1>"
           }
         },
         "back": {
           "area-1": {
             "type": "text",
-            "value": "<h1>9:03</h1>"
+            "value": "<h1>Dry</h1>"
           }
         }
       }
     },
     {
-      "name": "Clocks: Learning Time",
+      "name": "Opposites",
       "layouts": {
         "front": "full",
         "back": "full"
@@ -241,14 +241,98 @@
       "content": {
         "front": {
           "area-1": {
-            "type": "image",
-            "value": "./static/flashcards/flashcards-clock/9_33.png"
+            "type": "text",
+            "value": "<h1>Old</h1>"
           }
         },
         "back": {
           "area-1": {
             "type": "text",
-            "value": "<h1>9:33</h1>"
+            "value": "<h1>New</h1>"
+          }
+        }
+      }
+    },
+    {
+      "name": "Opposites",
+      "layouts": {
+        "front": "full",
+        "back": "full"
+      },
+      "content": {
+        "front": {
+          "area-1": {
+            "type": "text",
+            "value": "<h1>Clean</h1>"
+          }
+        },
+        "back": {
+          "area-1": {
+            "type": "text",
+            "value": "<h1>Dirty</h1>"
+          }
+        }
+      }
+    },
+    {
+      "name": "Opposites",
+      "layouts": {
+        "front": "full",
+        "back": "full"
+      },
+      "content": {
+        "front": {
+          "area-1": {
+            "type": "text",
+            "value": "<h1>Hard</h1>"
+          }
+        },
+        "back": {
+          "area-1": {
+            "type": "text",
+            "value": "<h1>Soft</h1>"
+          }
+        }
+      }
+    },
+    {
+      "name": "Opposites",
+      "layouts": {
+        "front": "full",
+        "back": "full"
+      },
+      "content": {
+        "front": {
+          "area-1": {
+            "type": "text",
+            "value": "<h1>Loud</h1>"
+          }
+        },
+        "back": {
+          "area-1": {
+            "type": "text",
+            "value": "<h1>Quiet</h1>"
+          }
+        }
+      }
+    },
+    {
+      "name": "Opposites",
+      "layouts": {
+        "front": "full",
+        "back": "full"
+      },
+      "content": {
+        "front": {
+          "area-1": {
+            "type": "text",
+            "value": "<h1>Tall</h1>"
+          }
+        },
+        "back": {
+          "area-1": {
+            "type": "text",
+            "value": "<h1>Short</h1>"
           }
         }
       }

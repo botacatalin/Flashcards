@@ -7,8 +7,8 @@
       url: "./static/flashcards/flashcards-clock-learning-time.json",
     },
     {
-      label: "Emotions",
-      url: "./static/flashcards/flashcards-emotions.json",
+      label: "Opposites",
+      url: "./static/flashcards/flashcards-opposites.json",
     },
   ];
 
