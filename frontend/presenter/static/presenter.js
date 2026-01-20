@@ -3,12 +3,12 @@
   const PRESENTER_STYLE_KEY = "flashcard-presenter-style";
   const DEFAULT_TOPICS = [
     {
-      label: "Emotions",
-      url: "./static/flashcards/flashcards-emotions.json",
+      label: "Clocks: Learning Time",
+      url: "./static/flashcards/flashcards-clock-learning-time.json",
     },
     {
-      label: "Opposites",
-      url: "./static/flashcards/flashcards-opposites.json",
+      label: "Emotions",
+      url: "./static/flashcards/flashcards-emotions.json",
     },
   ];
 
@@ -27,6 +27,7 @@
     presenterStyleSelect: document.getElementById("presenter-style"),
     presenterStyleLink: document.getElementById("presenter-style-link"),
     presenterCard: document.getElementById("presenter-card"),
+    presenterCounter: document.getElementById("presenter-counter"),
     presenterFullscreenButton: document.getElementById("presenter-fullscreen"),
     presenterShell: document.getElementById("presenter-shell"),
     presenterEmpty: document.getElementById("presenter-empty"),
@@ -119,6 +120,9 @@
       if (dom.presenterEmpty) {
         dom.presenterEmpty.hidden = false;
       }
+      if (dom.presenterCounter) {
+        dom.presenterCounter.hidden = true;
+      }
       return;
     }
     if (dom.presenterShell) {
@@ -128,6 +132,10 @@
       dom.presenterEmpty.hidden = true;
     }
     const card = getActiveCard() || meta.cards[0];
+    if (dom.presenterCounter) {
+      dom.presenterCounter.hidden = false;
+      dom.presenterCounter.textContent = `${meta.currentIndex + 1}/${meta.cards.length}`;
+    }
     setCardName(card.name);
     setPreviewLayouts(card.layouts.front, card.layouts.back);
     renderContent(card);

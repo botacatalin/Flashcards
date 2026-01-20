@@ -51,6 +51,12 @@
   color: #8b6f4b;
 }
 
+.presenter-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
 .preview-layout {
   display: grid;
   gap: 0.75rem;

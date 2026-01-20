@@ -1,0 +1,257 @@
+{
+  "version": 1,
+  "cards": [
+    {
+      "name": "Clocks: Learning Time",
+      "layouts": {
+        "front": "full",
+        "back": "full"
+      },
+      "content": {
+        "front": {
+          "area-1": {
+            "type": "image",
+            "value": "./static/flashcards/flashcards-clock/12_00.png"
+          }
+        },
+        "back": {
+          "area-1": {
+            "type": "text",
+            "value": "12:00"
+          }
+        }
+      }
+    },
+    {
+      "name": "Clocks: Learning Time",
+      "layouts": {
+        "front": "full",
+        "back": "full"
+      },
+      "content": {
+        "front": {
+          "area-1": {
+            "type": "image",
+            "value": "./static/flashcards/flashcards-clock/1_30.png"
+          }
+        },
+        "back": {
+          "area-1": {
+            "type": "text",
+            "value": "1:30"
+          }
+        }
+      }
+    },
+    {
+      "name": "Clocks: Learning Time",
+      "layouts": {
+        "front": "full",
+        "back": "full"
+      },
+      "content": {
+        "front": {
+          "area-1": {
+            "type": "image",
+            "value": "./static/flashcards/flashcards-clock/1_45.png"
+          }
+        },
+        "back": {
+          "area-1": {
+            "type": "text",
+            "value": "1:45"
+          }
+        }
+      }
+    },
+    {
+      "name": "Clocks: Learning Time",
+      "layouts": {
+        "front": "full",
+        "back": "full"
+      },
+      "content": {
+        "front": {
+          "area-1": {
+            "type": "image",
+            "value": "./static/flashcards/flashcards-clock/1_55.png"
+          }
+        },
+        "back": {
+          "area-1": {
+            "type": "text",
+            "value": "1:55"
+          }
+        }
+      }
+    },
+    {
+      "name": "Clocks: Learning Time",
+      "layouts": {
+        "front": "full",
+        "back": "full"
+      },
+      "content": {
+        "front": {
+          "area-1": {
+            "type": "image",
+            "value": "./static/flashcards/flashcards-clock/2_55.png"
+          }
+        },
+        "back": {
+          "area-1": {
+            "type": "text",
+            "value": "2:55"
+          }
+        }
+      }
+    },
+    {
+      "name": "Clocks: Learning Time",
+      "layouts": {
+        "front": "full",
+        "back": "full"
+      },
+      "content": {
+        "front": {
+          "area-1": {
+            "type": "image",
+            "value": "./static/flashcards/flashcards-clock/3_00.png"
+          }
+        },
+        "back": {
+          "area-1": {
+            "type": "text",
+            "value": "3:00"
+          }
+        }
+      }
+    },
+    {
+      "name": "Clocks: Learning Time",
+      "layouts": {
+        "front": "full",
+        "back": "full"
+      },
+      "content": {
+        "front": {
+          "area-1": {
+            "type": "image",
+            "value": "./static/flashcards/flashcards-clock/4_10.png"
+          }
+        },
+        "back": {
+          "area-1": {
+            "type": "text",
+            "value": "4:10"
+          }
+        }
+      }
+    },
+    {
+      "name": "Clocks: Learning Time",
+      "layouts": {
+        "front": "full",
+        "back": "full"
+      },
+      "content": {
+        "front": {
+          "area-1": {
+            "type": "image",
+            "value": "./static/flashcards/flashcards-clock/6_00.png"
+          }
+        },
+        "back": {
+          "area-1": {
+            "type": "text",
+            "value": "6:00"
+          }
+        }
+      }
+    },
+    {
+      "name": "Clocks: Learning Time",
+      "layouts": {
+        "front": "full",
+        "back": "full"
+      },
+      "content": {
+        "front": {
+          "area-1": {
+            "type": "image",
+            "value": "./static/flashcards/flashcards-clock/6_30.png"
+          }
+        },
+        "back": {
+          "area-1": {
+            "type": "text",
+            "value": "6:30"
+          }
+        }
+      }
+    },
+    {
+      "name": "Clocks: Learning Time",
+      "layouts": {
+        "front": "full",
+        "back": "full"
+      },
+      "content": {
+        "front": {
+          "area-1": {
+            "type": "image",
+            "value": "./static/flashcards/flashcards-clock/8_00.png"
+          }
+        },
+        "back": {
+          "area-1": {
+            "type": "text",
+            "value": "8:00"
+          }
+        }
+      }
+    },
+    {
+      "name": "Clocks: Learning Time",
+      "layouts": {
+        "front": "full",
+        "back": "full"
+      },
+      "content": {
+        "front": {
+          "area-1": {
+            "type": "image",
+            "value": "./static/flashcards/flashcards-clock/9_03.png"
+          }
+        },
+        "back": {
+          "area-1": {
+            "type": "text",
+            "value": "9:03"
+          }
+        }
+      }
+    },
+    {
+      "name": "Clocks: Learning Time",
+      "layouts": {
+        "front": "full",
+        "back": "full"
+      },
+      "content": {
+        "front": {
+          "area-1": {
+            "type": "image",
+            "value": "./static/flashcards/flashcards-clock/9_33.png"
+          }
+        },
+        "back": {
+          "area-1": {
+            "type": "text",
+            "value": "9:33"
+          }
+        }
+      }
+    }
+  ]
+}
