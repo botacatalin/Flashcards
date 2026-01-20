@@ -546,7 +546,7 @@
             cards: cards.map(normalizeCard),
             currentIndex: 0,
           }));
-          window.location.href = "/presenter/index.html";
+          window.location.href = "../presenter/index.html";
         } catch (error) {
           console.warn("Unable to import flashcards.", error);
         } finally {
